@@ -82,49 +82,26 @@ KHÔNG viết code, KHÔNG scaffold, KHÔNG implement cho đến khi có file sp
 ---
 
 ## Stack
-[Điền sau Phase 0]
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- TanStack Query
+- Zustand
 
 ## Folder Structure
-[Điền sau Phase 0]
-
----
-
-## Coding Rules
-
-- Test viết ngay sau mỗi task — không để cuối
-- 1 commit = 1 task — message: `feat/fix/test/chore: [mô tả]`
-- Error handling cho mọi async function
-- Không sửa files ngoài danh sách cho phép trong task
-- Đọc `docs/knowledge/INDEX.md` trước khi code feature liên quan
-- Khi gặp git merge conflict → **KHÔNG tự resolve** → báo user quyết định
-
-## Skills (AI Auto-Activate)
-
-> **Quy tắc ưu tiên:** `skills/` (template) > `~/.gemini/antigravity/skills/` (global)
-> Nếu cùng 1 skill có ở cả 2 nơi → **BẮT BUỘC dùng bản template**.
-
-Đọc `skills/[tên-skill]/SKILL.md` trước khi thực hiện task thuộc danh mục tương ứng:
-
-| Trigger | Skill | File |
-|---------|-------|------|
-| Trước khi code feature mới | `brainstorming` | `skills/brainstorming/SKILL.md` |
-| Khi user yêu cầu plan/checklist | `concise-planning` | `skills/concise-planning/SKILL.md` |
-| Khi viết async, API, DB code | `error-handling-patterns` | `skills/error-handling-patterns/SKILL.md` |
-| Khi viết tests | `testing-patterns` | `skills/testing-patterns/SKILL.md` |
-| Khi viết README, docs | `documentation-templates` | `skills/documentation-templates/SKILL.md` |
-| Khi build UI/UX | `ui-ux-pro-max` | `skills/ui-ux-pro-max/SKILL.md` |
-
-## Learned Rules
-<!-- AI tự thêm rules đã promote từ docs/knowledge/ vào đây -->
-[Chưa có — sẽ được thêm khi knowledge được promote]
-
----
+- `src/app/` (Next.js Pages/Components)
+- `src/components/` (Shared components)
+- `src/hooks/` (Hooks)
+- `src/lib/` (Utils, APIs)
+- `src/store/` (State)
+- `src/types/` (TS Definitions)
 
 ## Phase & Task
 
-- **Current Phase:** Phase 0 — Planning (chưa bắt đầu)
+- **Current Phase:** Phase 1 — Project Scaffolding & Setup
 - **Tasks:** xem `tasks/todo.md`
-- **Phase details:** xem `docs/phases/phase-0.md`
+- **Phase details:** xem `docs/phases/phase-1.md`
 
 ---
 
