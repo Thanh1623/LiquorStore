@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useCartStore } from "@/store/cartStore";
-import { Menu, X, Phone, Mail, Facebook, Twitter, Instagram, Globe } from "lucide-react";
+import { Menu, X, Phone, Mail, Facebook, Instagram, Globe } from "lucide-react";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,6 @@ export function Header() {
           </div>
           <div className="flex items-center gap-4">
             <Facebook size={14} />
-            <Twitter size={14} />
             <Instagram size={14} />
             <Globe size={14} />
             <span className="border-l border-white/20 pl-4">SIGN UP</span>
