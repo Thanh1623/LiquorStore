@@ -9,8 +9,8 @@ export function Header() {
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <header className="z-50 w-full">
-      {/* Top Bar (Non-sticky) */}
+    <>
+      {/* Top Bar (Scrolls away) */}
       <div className="bg-[#A23F25] text-white py-2 text-[12px] font-serif hidden md:block">
         <div className="container mx-auto px-8 flex justify-between items-center">
           <div className="flex items-center gap-4">
@@ -34,7 +34,7 @@ export function Header() {
       </div>
 
       {/* Navigation Bar (Sticky) */}
-      <div className="sticky top-0 bg-white border-b border-[#CCCCCC] h-[73px]">
+      <header className="sticky top-0 z-50 bg-white border-b border-[#CCCCCC] h-[73px]">
         <div className="container mx-auto flex h-full items-center justify-between px-4 md:px-8">
           <Link href="/" className="text-2xl md:text-3xl font-bold tracking-tighter text-[#212529] font-serif">
             LIQUOR STORE
@@ -64,18 +64,18 @@ export function Header() {
             </button>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Nav */}
-      {isOpen && (
-        <nav className="md:hidden bg-white border-b border-[#CCCCCC] p-4 flex flex-col gap-4 text-[16px] font-medium font-serif text-[#212529]">
-          <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">HOME</Link>
-          <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">ABOUT</Link>
-          <Link href="/products" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">PRODUCTS</Link>
-          <Link href="/blog" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">BLOG</Link>
-          <Link href="/contact" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">CONTACT</Link>
-        </nav>
-      )}
-    </header>
+        {/* Mobile Nav */}
+        {isOpen && (
+          <nav className="md:hidden bg-white border-b border-[#CCCCCC] p-4 flex flex-col gap-4 text-[16px] font-medium font-serif text-[#212529]">
+            <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">HOME</Link>
+            <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">ABOUT</Link>
+            <Link href="/products" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">PRODUCTS</Link>
+            <Link href="/blog" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">BLOG</Link>
+            <Link href="/contact" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">CONTACT</Link>
+          </nav>
+        )}
+      </header>
+    </>
   );
 }
