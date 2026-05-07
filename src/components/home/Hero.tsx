@@ -14,7 +14,7 @@ export function Hero() {
       />
       
       <div className="relative z-10 space-y-6 md:space-y-8 max-w-4xl px-4 md:px-8">
-        <h1 className="text-[40px] md:text-[80px] font-serif text-white leading-[45px] md:leading-[88px] font-bold italic">
+        <h1 className="text-[30px] md:text-[60px] font-serif text-white leading-[40px] md:leading-[70px] font-bold italic -rotate-[30deg] origin-center">
           Good Drink for Good Moments
         </h1>
         <div className="flex gap-4 justify-center">
