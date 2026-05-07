@@ -24,10 +24,10 @@ export function Footer() {
         <div className="space-y-4">
           <p className="text-[14px] font-semibold text-white">USEFUL LINKS</p>
           <ul className="space-y-2">
-            <li><a href="/about" className="hover:text-white transition-colors">About Us</a></li>
+            <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
             <li><a href="/products" className="hover:text-white transition-colors">Premium Collection</a></li>
-            <li><a href="/blog" className="hover:text-white transition-colors">Spirits Blog</a></li>
-            <li><a href="/contact" className="hover:text-white transition-colors">Support</a></li>
+            <li><a href="/login" className="hover:text-white transition-colors">Login</a></li>
+            <li><a href="/checkout" className="hover:text-white transition-colors">Checkout</a></li>
           </ul>
         </div>
 
