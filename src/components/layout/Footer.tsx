@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-    <footer className="bg-[#000000] py-16">
-      <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-12 text-serif text-[12px] font-light text-[rgba(255,255,255,0.6)]">
+    <footer className="bg-[#000000] py-12">
+      <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-serif text-[12px] font-light text-[rgba(255,255,255,0.6)]">
         {/* Brand */}
         <div className="space-y-4">
           <p className="text-lg font-semibold text-white tracking-widest">LIQUOR STORE</p>
@@ -39,10 +39,11 @@ export function Footer() {
             <a href="#" className="hover:text-white transition-colors">Twitter</a>
             <a href="#" className="hover:text-white transition-colors">Instagram</a>
           </div>
+          {/* Copyright moved here and smaller */}
+          <p className="pt-4 text-[10px] text-[rgba(255,255,255,0.3)]">
+            © {new Date().getFullYear()} LiquorStore. All rights reserved.
+          </p>
         </div>
-      </div>
-      <div className="container mx-auto px-8 mt-12 pt-8 border-t border-[rgba(255,255,255,0.1)] text-center text-[11px] text-[rgba(255,255,255,0.4)]">
-        <p>© {new Date().getFullYear()} LiquorStore. All rights reserved.</p>
       </div>
     </footer>
   );
