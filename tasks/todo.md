@@ -2,7 +2,7 @@
 
 - [x] Init Project (Next.js, Tailwind, shadcn/ui, linting) - Priority: high - Status: completed
 - [x] Implement UI Layout (Header, Footer, Navbar) - Priority: high - Status: completed
-- [ ] Implement Home Page (Hero, Intro, Categories) - Priority: medium - Status: pending
+- [x] Implement Home Page (Hero, Intro, Categories) - Priority: medium - Status: completed
 - [ ] Implement Product Module (Fetch mock data, Listing page) - Priority: high - Status: pending
 - [ ] Implement Cart Management (Zustand store) - Priority: high - Status: pending
 - [ ] Implement Checkout/Auth Simulation - Priority: medium - Status: pending
