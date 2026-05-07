@@ -1,7 +1,7 @@
 export function Footer() {
   return (
-    <footer className="bg-[#000000] py-12">
-      <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-serif text-[12px] font-light text-[rgba(255,255,255,0.6)]">
+    <footer className="bg-[#000000] py-8 md:py-12">
+      <div className="container mx-auto px-4 md:px-8 grid grid-cols-1 md:grid-cols-4 gap-8 text-serif text-[12px] font-light text-[rgba(255,255,255,0.6)]">
         {/* Brand */}
         <div className="space-y-4">
           <p className="text-lg font-semibold text-white tracking-widest">LIQUOR STORE</p>
