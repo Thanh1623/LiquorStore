@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "chuyenruouvangnhapkhau.com",
       },
+      {
+        protocol: "https",
+        hostname: "vintagewine.vn",
+      },
     ],
   },
 };

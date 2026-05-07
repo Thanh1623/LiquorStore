@@ -6,29 +6,17 @@ export function Hero() {
     <section className="relative h-screen flex items-center justify-center text-center bg-[#212529]">
       {/* Background image */}
       <Image
-        src="https://chuyenruouvangnhapkhau.com/upload/default/images/R%C6%B0%E1%BB%A3u%20Vang%20%C3%9D%20Con%20C%C3%B4ng%20Vindoro%2024%20Karat%20Gold%202019%208.jpg"
+        src="https://vintagewine.vn/wp-content/uploads/2021/12/111-scaled.jpg"
         alt="Premium Spirits"
         fill
         className="object-cover"
         priority
       />
       
-      <div className="relative z-10 max-w-4xl px-4 md:px-8">
-        <div className="relative font-serif text-white mb-12">
-          {/* Artistic Text Layout */}
-          <div className="relative flex flex-col items-center">
-            <div className="relative flex items-center gap-4">
-              <span className="text-4xl md:text-6xl text-transparent [-webkit-text-stroke:1px_white] -rotate-12">Good</span>
-              <span className="text-5xl md:text-8xl font-bold">Drink</span>
-            </div>
-            <span className="italic text-lg md:text-2xl my-2">for</span>
-            <div className="relative flex items-center gap-4">
-              <span className="text-4xl md:text-6xl text-transparent [-webkit-text-stroke:1px_white] -rotate-12">Good</span>
-              <span className="text-5xl md:text-8xl font-bold">Moments</span>
-            </div>
-          </div>
-        </div>
-
+      <div className="relative z-10 space-y-6 md:space-y-8 max-w-4xl px-4 md:px-8">
+        <h1 className="text-[40px] md:text-[80px] font-serif text-white leading-[45px] md:leading-[88px] font-bold italic">
+          Good Drink for Good Moments
+        </h1>
         <div className="flex gap-4 justify-center">
           <Link 
             href="/shop" 
