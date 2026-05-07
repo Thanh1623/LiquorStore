@@ -14,10 +14,14 @@ export function Hero() {
       />
       
       <div className="relative z-10 space-y-6 md:space-y-8 max-w-4xl px-4 md:px-8">
-        <h1 className="text-[30px] md:text-[60px] font-serif text-white leading-[40px] md:leading-[70px] font-bold italic rotate-[10deg] origin-center">
-          Good Drink for Good Moments
+        <h1 className="text-[40px] md:text-[80px] font-serif text-white leading-[1.1] font-bold">
+          <span className="inline-block -rotate-12 text-transparent [-webkit-text-stroke:1px_white]">Good</span>
+          <span className="uppercase mx-4">Drink</span>
+          <span className="italic text-2xl md:text-4xl mx-2 font-normal">for</span>
+          <span className="inline-block -rotate-12 text-transparent [-webkit-text-stroke:1px_white]">Good</span>
+          <span className="block uppercase">Moments</span>
         </h1>
-        <div className="flex gap-4 justify-center rotate-[10deg]">
+        <div className="flex gap-4 justify-center">
           <Link 
             href="/shop" 
             className="bg-[#AB4227] text-white font-serif px-6 py-2 rounded-[3px] font-medium hover:bg-[#B7472A] transition-all"
