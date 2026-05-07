@@ -6,7 +6,7 @@ export function Hero() {
     <section className="relative h-[60vh] md:h-[80vh] flex items-center justify-center text-center bg-[#212529]">
       {/* Background image */}
       <Image
-        src="https://images.unsplash.com/photo-1527281400683-1aae777175f8?q=80&w=2000&auto=format&fit=crop"
+        src="https://chuyenruouvangnhapkhau.com/upload/default/images/R%C6%B0%E1%BB%A3u%20Vang%20%C3%9D%20Con%20C%C3%B4ng%20Vindoro%2024%20Karat%20Gold%202019%208.jpg"
         alt="Premium Spirits"
         fill
         className="object-cover"
