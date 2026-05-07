@@ -7,4 +7,4 @@
 - [x] Implement Cart Management (Zustand store) - Priority: high - Status: completed
 - [x] Implement Checkout/Auth Simulation - Priority: medium - Status: completed
 - [x] Implement Admin Dashboard (Basic CRUD) - Priority: medium - Status: completed
-- [ ] Write E2E/Unit Tests - Priority: low - Status: pending
+- [x] Write E2E/Unit Tests - Priority: low - Status: completed
