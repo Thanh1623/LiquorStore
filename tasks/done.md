@@ -14,3 +14,9 @@
 -->
 
 _Chưa có tasks hoàn thành._
+
+## Phase 1
+| Task | Mô tả | Commit | Date |
+|------|-------|--------|------|
+| 1.1 | Init Project (Next.js, Tailwind, shadcn/ui, linting) | 3bdebdb | 2026-05-07 |
+| 1.2 | Implement UI Layout (Header, Footer, Navbar) | 7e00199 | 2026-05-07 |

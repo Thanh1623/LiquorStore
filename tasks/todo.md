@@ -1,7 +1,7 @@
 # Tasks Todo
 
-- [ ] Init Project (Next.js, Tailwind, shadcn/ui, linting) - Priority: high - Status: pending
-- [ ] Implement UI Layout (Header, Footer, Navbar) - Priority: high - Status: pending
+- [x] Init Project (Next.js, Tailwind, shadcn/ui, linting) - Priority: high - Status: completed
+- [x] Implement UI Layout (Header, Footer, Navbar) - Priority: high - Status: completed
 - [ ] Implement Home Page (Hero, Intro, Categories) - Priority: medium - Status: pending
 - [ ] Implement Product Module (Fetch mock data, Listing page) - Priority: high - Status: pending
 - [ ] Implement Cart Management (Zustand store) - Priority: high - Status: pending
