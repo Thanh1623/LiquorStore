@@ -1,9 +1,9 @@
 "use client";
 import { useState } from 'react';
-import { MOCK_PRODUCTS } from '@/lib/mock-data';
+import { products } from '@/lib/mock-data';
 
 export default function AdminDashboard() {
-  const [products, setProducts] = useState(MOCK_PRODUCTS);
+  const [productList, setProductList] = useState(products);
 
   return (
     <div className="container mx-auto px-8 py-16">
@@ -17,7 +17,7 @@ export default function AdminDashboard() {
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
+          {productList.map((p) => (
             <tr key={p.id}>
               <td className="border p-4">{p.name}</td>
               <td className="border p-4">${p.price}</td>
