@@ -4,8 +4,6 @@ import { AboutUs } from "@/components/home/AboutUs";
 import { SpiritCategories } from "@/components/home/SpiritCategories";
 import { TastefullyYours } from "@/components/home/TastefullyYours";
 import { Testimonials } from "@/components/home/Testimonials";
-import { Intro } from "@/components/home/Intro";
-import { Categories } from "@/components/home/Categories";
 
 export default function Home() {
   return (
@@ -16,8 +14,6 @@ export default function Home() {
       <SpiritCategories />
       <TastefullyYours />
       <Testimonials />
-      <Intro />
-      <Categories />
     </div>
   );
 }
