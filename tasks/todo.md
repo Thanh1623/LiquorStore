@@ -1,10 +1,8 @@
 # Tasks Todo
 
-- [x] Init Project (Next.js, Tailwind, shadcn/ui, linting) - Priority: high - Status: completed
-- [x] Implement UI Layout (Header, Footer, Navbar) - Priority: high - Status: completed
-- [x] Implement Home Page (Hero, Intro, Categories) - Priority: medium - Status: completed
-- [x] Implement Product Module (Fetch mock data, Listing page) - Priority: high - Status: completed
-- [x] Implement Cart Management (Zustand store) - Priority: high - Status: completed
-- [x] Implement Checkout/Auth Simulation - Priority: medium - Status: completed
-- [x] Implement Admin Dashboard (Basic CRUD) - Priority: medium - Status: completed
-- [x] Write E2E/Unit Tests - Priority: low - Status: completed
+- [x] Setup Mock Data Layer - Priority: high - Status: completed
+- [in_progress] Dynamic Product Pages - Priority: high - Status: in_progress
+- [ ] Search & Filter (Client-side) - Priority: medium - Status: pending
+- [ ] Cart Persistence - Priority: high - Status: pending
+- [ ] Profile & Order Mocking - Priority: medium - Status: pending
+- [ ] Define API Contract - Priority: high - Status: pending

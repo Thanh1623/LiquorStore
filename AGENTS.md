@@ -99,7 +99,7 @@ KHÔNG viết code, KHÔNG scaffold, KHÔNG implement cho đến khi có file sp
 
 ## Phase & Task
 
-- **Current Phase:** Phase 1 — Project Scaffolding & Setup
+- **Current Phase:** Phase 2 — Frontend & Mock Data Integration
 - **Tasks:** xem `tasks/todo.md`
 - **Phase details:** xem `docs/phases/phase-1.md`
 
