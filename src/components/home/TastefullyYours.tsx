@@ -42,7 +42,7 @@ const products = [
 
 export function TastefullyYours() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <p className="text-[#AB4227] italic font-serif mb-2">Our Delightful offerings</p>
@@ -95,7 +95,7 @@ export function TastefullyYours() {
             </div>
           ))}
         </div>
-        <div className="mt-16 text-center">
+        <div className="mt-10 text-center">
           <Link
             href="/shop"
             className="inline-flex items-center gap-2 text-[#AB4227] font-serif font-bold text-lg hover:underline transition-all"

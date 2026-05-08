@@ -29,7 +29,7 @@ export function Testimonials() {
   }, []);
 
   return (
-    <section className="relative py-24 bg-[#1a1a1a] text-white overflow-hidden">
+    <section className="relative py-16 bg-[#1a1a1a] text-white overflow-hidden">
       {/* Background Image Overlay */}
       <div className="absolute inset-0 opacity-20">
         <Image

@@ -14,7 +14,7 @@ const categories = [
 
 export function SpiritCategories() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
           {categories.map((category, index) => (
