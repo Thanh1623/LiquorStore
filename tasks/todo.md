@@ -9,4 +9,4 @@
 - [x] Setup API Client - Priority: high - Status: completed
 - [x] TanStack Query Integration - Priority: high - Status: completed
 - [x] Loading & Error States - Priority: medium - Status: completed
-- [in_progress] Env Configuration - Priority: medium - Status: in_progress
+- [x] Env Configuration - Priority: medium - Status: completed

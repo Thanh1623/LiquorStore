@@ -25,3 +25,11 @@
 | 2.4 | Cart Persistence | ca76447 | 2026-05-08 |
 | 2.5 | Profile & Order Mocking | 30e4484 | 2026-05-08 |
 | 2.6 | Define API Contract | df9cf9f | 2026-05-08 |
+
+## Phase 3
+| Task | Mô tả | Commit | Date |
+|------|-------|--------|------|
+| 3.1 | Setup API Client | 9447c88 | 2026-05-08 |
+| 3.2 | TanStack Query Integration | da6ad87 | 2026-05-08 |
+| 3.3 | Loading & Error States | f18691d | 2026-05-08 |
+| 3.4 | Env Configuration | 497a76c | 2026-05-08 |
