@@ -44,7 +44,7 @@ export function Header() {
           <nav className="hidden md:flex items-center gap-8 text-[16px] font-medium font-serif text-[#212529]">
             <Link href="/" className="transition-colors hover:text-[#AB4227]">HOME</Link>
             <Link href="/about" className="transition-colors hover:text-[#AB4227]">ABOUT</Link>
-            <Link href="/products" className="transition-colors hover:text-[#AB4227]">PRODUCTS</Link>
+            <Link href="/shop" className="transition-colors hover:text-[#AB4227]">PRODUCTS</Link>
             <Link href="/blog" className="transition-colors hover:text-[#AB4227]">BLOG</Link>
             <Link href="/contact" className="transition-colors hover:text-[#AB4227]">CONTACT</Link>
           </nav>
@@ -70,7 +70,7 @@ export function Header() {
           <nav className="md:hidden bg-white border-b border-[#CCCCCC] p-4 flex flex-col gap-4 text-[16px] font-medium font-serif text-[#212529]">
             <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">HOME</Link>
             <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">ABOUT</Link>
-            <Link href="/products" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">PRODUCTS</Link>
+            <Link href="/shop" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">PRODUCTS</Link>
             <Link href="/blog" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">BLOG</Link>
             <Link href="/contact" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">CONTACT</Link>
           </nav>
