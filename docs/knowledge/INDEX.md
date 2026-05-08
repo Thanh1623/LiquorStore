@@ -18,8 +18,7 @@
 
 <!-- AI tự thêm entries ở đây khi tạo knowledge file mới -->
 <!-- Format: - [Title](./filename.md) — Status — 1-line summary -->
-
-_Chưa có learnings. Sẽ được thêm khi phát hiện patterns trong quá trình phát triển._
+- [Next.js Image Component Configuration](./2026-05-08-next-image-remote-patterns.md) — 📝 Draft — Required to configure remote domains for next/image
 
 ---
 
@@ -32,4 +31,5 @@ _Chưa có_
 _Chưa có_
 
 ### 📝 Draft (single occurrence)
-_Chưa có_
+- [Next.js Image Component Configuration](./2026-05-08-next-image-remote-patterns.md)
+
