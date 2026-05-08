@@ -4,17 +4,6 @@
 
 ---
 
-<!-- AI tự thêm phases ở đây khi tạo trong Phase 0 -->
-<!-- Format:
-## Phase N: [Tên Phase]
-
-| Task | Mô tả | Commit | Date |
-|------|-------|--------|------|
-| N.1 | [task] | [hash] | YYYY-MM-DD |
--->
-
-_Chưa có tasks hoàn thành._
-
 ## Phase 1
 | Task | Mô tả | Commit | Date |
 |------|-------|--------|------|
@@ -26,3 +15,13 @@ _Chưa có tasks hoàn thành._
 | 1.6 | Implement Checkout/Auth Simulation | 033d932 | 2026-05-07 |
 | 1.7 | Implement Admin Dashboard (Basic CRUD) | 4cd6f3c | 2026-05-07 |
 | 1.8 | Write E2E/Unit Tests | N/A | 2026-05-07 |
+
+## Phase 2
+| Task | Mô tả | Commit | Date |
+|------|-------|--------|------|
+| 2.1 | Setup Mock Data Layer | d7dcda1 | 2026-05-08 |
+| 2.2 | Dynamic Product Pages | 61614ea | 2026-05-08 |
+| 2.3 | Search & Filter (Client-side) | a94b0a2 | 2026-05-08 |
+| 2.4 | Cart Persistence | ca76447 | 2026-05-08 |
+| 2.5 | Profile & Order Mocking | 30e4484 | 2026-05-08 |
+| 2.6 | Define API Contract | df9cf9f | 2026-05-08 |
