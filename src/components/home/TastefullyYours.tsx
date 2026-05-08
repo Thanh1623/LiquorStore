@@ -2,7 +2,8 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ShoppingBag, Heart, Eye } from "lucide-react";
+import Link from "next/link";
+import { ShoppingBag, Heart, Eye, ArrowRight } from "lucide-react";
 
 const products = [
   {
@@ -93,6 +94,14 @@ export function TastefullyYours() {
               </div>
             </div>
           ))}
+        </div>
+        <div className="mt-16 text-center">
+          <Link
+            href="/shop"
+            className="inline-flex items-center gap-2 text-[#AB4227] font-serif font-bold text-lg hover:underline transition-all"
+          >
+            View all products <ArrowRight size={20} />
+          </Link>
         </div>
       </div>
     </section>
