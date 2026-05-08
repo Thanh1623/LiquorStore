@@ -3,6 +3,7 @@ import { Features } from "@/components/home/Features";
 import { AboutUs } from "@/components/home/AboutUs";
 import { SpiritCategories } from "@/components/home/SpiritCategories";
 import { TastefullyYours } from "@/components/home/TastefullyYours";
+import { Testimonials } from "@/components/home/Testimonials";
 import { Intro } from "@/components/home/Intro";
 import { Categories } from "@/components/home/Categories";
 
@@ -14,6 +15,7 @@ export default function Home() {
       <AboutUs />
       <SpiritCategories />
       <TastefullyYours />
+      <Testimonials />
       <Intro />
       <Categories />
     </div>
