@@ -17,12 +17,12 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/shop/${product.id}`} className="group block">
       {/* Container with subtle border */}
-      <div className="relative aspect-[4/5] overflow-hidden bg-gray-50 border border-gray-100 group-hover:border-gray-300 transition-colors duration-500 mb-6">
+      <div className="relative aspect-[3/4] overflow-hidden bg-gray-50 border border-gray-100 group-hover:border-gray-300 transition-colors duration-500 mb-6 p-8">
         <Image
           src={product.image}
           alt={product.name}
           fill
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className="object-contain transition-transform duration-700 group-hover:scale-105"
         />
       </div>
       
