@@ -2,7 +2,7 @@
 import { useCartStore } from "@/store/cartStore";
 
 export default function CheckoutPage() {
-  const items = useCartStore((state) => state.items);
+  const { items, removeItem, increaseQuantity, decreaseQuantity } = useCartStore();
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
@@ -14,19 +14,37 @@ export default function CheckoutPage() {
         <div className="space-y-8">
           <h2 className="text-[24px] font-serif font-medium pb-4 border-b border-[#E5E5E5]">Order Summary</h2>
           
-          <div className="space-y-4">
+          <div className="space-y-6">
             {items.map((item) => (
               <div key={item.id} className="flex justify-between items-center text-[16px] font-serif text-[#212529]">
-                <span className="text-gray-600">{item.name} <span className="text-black font-semibold">x{item.quantity}</span></span>
-                <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+                <div className="flex items-center gap-4">
+                  <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500 transition-colors">
+                    ✕
+                  </button>
+                  <span className="text-gray-600">{item.name}</span>
+                </div>
+                
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center border border-[#CCCCCC] rounded-sm">
+                    <button onClick={() => decreaseQuantity(item.id)} className="px-3 py-1 hover:bg-gray-100">-</button>
+                    <span className="px-3 py-1 border-x border-[#CCCCCC]">{item.quantity}</span>
+                    <button onClick={() => increaseQuantity(item.id)} className="px-3 py-1 hover:bg-gray-100">+</button>
+                  </div>
+                  <span className="font-semibold min-w-[80px] text-right">
+                    ${(item.price * item.quantity).toFixed(2)}
+                  </span>
+                </div>
               </div>
             ))}
+            {items.length === 0 && <p className="text-gray-500 font-serif">Your cart is empty.</p>}
           </div>
           
-          <div className="border-t border-[#E5E5E5] pt-6 flex justify-between items-center text-[20px] font-serif font-bold text-[#212529]">
-            <span>Total</span>
-            <span>${total.toFixed(2)}</span>
-          </div>
+          {items.length > 0 && (
+            <div className="border-t border-[#E5E5E5] pt-6 flex justify-between items-center text-[20px] font-serif font-bold text-[#212529]">
+              <span>Total</span>
+              <span>${total.toFixed(2)}</span>
+            </div>
+          )}
         </div>
 
         {/* Shipping Details */}
