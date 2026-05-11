@@ -5,6 +5,6 @@
 - [x] Initialize Prisma - Priority: high - Status: completed
 - [x] Define Database Schema (User, Product, Order) - Priority: high - Status: completed
 - [x] Implement JWT Authentication Flow (Supabase Auth) - Priority: high - Status: completed
-- [ ] Refactor Hooks to use Real API - Priority: high - Status: pending
+- [x] Refactor Hooks to use Real API - Priority: high - Status: completed
 - [ ] Implement Route Protection (Auth Guard) - Priority: medium - Status: pending
 - [ ] Implement Global API Error Handling - Priority: medium - Status: pending
