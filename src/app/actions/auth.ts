@@ -30,10 +30,27 @@ export async function register(formData: FormData) {
     password: formData.get('password') as string,
   }
 
-  const { error } = await supabase.auth.signUp(data)
+  const { data: authData, error } = await supabase.auth.signUp(data)
 
   if (error) {
     return { error: error.message }
+  }
+
+  if (authData.user) {
+    const { error: userError } = await supabase
+      .from('User')
+      .insert([
+        { 
+          id: authData.user.id, 
+          email: data.email, 
+          password: 'managed-by-supabase' 
+        }
+      ])
+
+    if (userError) {
+      console.error('Error inserting user to database:', userError)
+      // Depending on requirements, you might want to delete the auth user here
+    }
   }
 
   return { success: true }
