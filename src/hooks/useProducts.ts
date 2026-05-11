@@ -12,7 +12,7 @@ export interface Product {
 }
 
 export function useProducts() {
-  return useQuery({
+  const query = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -21,7 +21,6 @@ export function useProducts() {
 
       if (error) throw error;
       
-      // Map database schema to frontend Product interface
       return (data as any[]).map(p => ({
         ...p,
         image: p.image_url,
@@ -29,4 +28,11 @@ export function useProducts() {
       })) as Product[];
     },
   });
+
+  // Global Error Logging/Handling can be added here
+  if (query.error) {
+    console.error('Error fetching products:', query.error);
+  }
+
+  return query;
 }
