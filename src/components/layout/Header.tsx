@@ -1,17 +1,33 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
 import { useCartStore } from "@/store/cartStore";
+import { cn } from "@/lib/utils";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const items = useCartStore((state) => state.items);
   const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
+  const pathname = usePathname();
+  const isHome = pathname === "/";
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 73);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       {/* Top Bar (Scrolls away) */}
-      <div className="bg-[#A23F25] text-white py-2 text-[12px] font-serif hidden md:block">
+      <div className={cn(
+        "bg-[#A23F25] text-white py-2 text-[12px] font-serif hidden md:block transition-all duration-300",
+        isHome && !isScrolled ? "hidden" : "block"
+      )}>
         <div className="container mx-auto px-8 flex justify-between items-center">
           <div className="flex items-center gap-4">
             <span className="flex items-center gap-1">
@@ -34,14 +50,22 @@ export function Header() {
       </div>
 
       {/* Navigation Bar (Sticky) */}
-      <header className="sticky top-0 z-50 bg-white border-b border-[#CCCCCC] h-[73px]">
+      <header className={cn(
+        "z-50 border-b h-[73px] transition-all duration-300 w-full",
+        isHome && !isScrolled 
+          ? "absolute top-6 bg-transparent border-transparent text-white" 
+          : "sticky top-0 bg-white border-[#CCCCCC] text-[#212529]"
+      )}>
         <div className="container mx-auto flex h-full items-center justify-between px-4 md:px-8">
-          <Link href="/" className="text-2xl md:text-3xl font-bold tracking-tighter text-[#212529] font-serif">
+          <Link href="/" className="text-2xl md:text-3xl font-bold tracking-tighter font-serif">
             LIQUOR STORE
           </Link>
           
           {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8 text-[16px] font-medium font-serif text-[#212529]">
+          <nav className={cn(
+            "hidden md:flex items-center gap-8 text-[16px] font-medium font-serif",
+            isHome && !isScrolled ? "text-white" : "text-[#212529]"
+          )}>
             <Link href="/" className="transition-colors hover:text-[#AB4227]">HOME</Link>
             <Link href="/about" className="transition-colors hover:text-[#AB4227]">ABOUT</Link>
             <Link href="/shop" className="transition-colors hover:text-[#AB4227]">PRODUCTS</Link>
@@ -50,17 +74,22 @@ export function Header() {
           </nav>
           
           <div className="flex items-center gap-4">
-            <Link href="/checkout" className="text-[16px] font-medium text-[#212529] font-serif transition-colors hover:text-[#AB4227]">
+            <Link href="/checkout" className={cn(
+              "text-[16px] font-medium font-serif transition-colors hover:text-[#AB4227]",
+              isHome && !isScrolled ? "text-white" : "text-[#212529]"
+            )}>
               Cart ({totalItems})
             </Link>
             
             {/* Mobile Menu Button */}
             <button className="md:hidden p-2" onClick={() => setIsOpen(!isOpen)}>
-              {isOpen ? (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-              ) : (
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-              )}
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                {isOpen ? (
+                  <path d="M18 6L6 18M6 6l12 12" />
+                ) : (
+                  <path d="M3 12h18M3 6h18M3 18h18" />
+                )}
+              </svg>
             </button>
           </div>
         </div>
@@ -81,3 +110,4 @@ export function Header() {
     </>
   );
 }
+
