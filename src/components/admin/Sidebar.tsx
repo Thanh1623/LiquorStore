@@ -3,7 +3,7 @@ import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut } from 'lucide-
 
 export function Sidebar() {
   return (
-    <aside className="w-64 h-screen bg-slate-950 text-slate-200 flex flex-col p-6 border-r border-slate-800">
+    <aside className="w-64 min-h-screen bg-slate-950 text-slate-200 flex flex-col p-6 border-r border-slate-800">
       <div className="mb-10">
         <h1 className="text-2xl font-serif text-yellow-600 tracking-wider">LuxeAdmin</h1>
       </div>
