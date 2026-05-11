@@ -18,7 +18,7 @@ export default function CheckoutPage() {
             {items.map((item) => (
               <div key={item.id} className="flex justify-between items-center text-[16px] font-serif text-[#212529]">
                 <div className="flex items-center gap-4">
-                  <button onClick={() => removeItem(item.id)} className="text-gray-400 hover:text-red-500 transition-colors">
+                  <button onClick={() => removeItem(item.id)} className="text-gray-500 hover:text-red-600 transition-colors font-bold hover:bg-gray-200 p-1 rounded-full w-6 h-6 flex items-center justify-center">
                     ✕
                   </button>
                   <span className="text-gray-600">{item.name}</span>
