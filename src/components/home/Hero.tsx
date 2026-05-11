@@ -6,7 +6,7 @@ export function Hero() {
     <section className="relative h-screen flex items-center justify-center text-center bg-[#212529]">
       {/* Background image */}
       <Image
-        src="https://vintagewine.vn/wp-content/uploads/2021/12/111-scaled.jpg"
+        src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2000&auto=format&fit=crop"
         alt="Premium Spirits"
         fill
         className="object-cover"
