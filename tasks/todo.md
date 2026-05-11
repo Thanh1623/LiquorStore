@@ -1,12 +1,10 @@
 # Tasks Todo
 
-- [x] Setup Mock Data Layer - Priority: high - Status: completed
-- [x] Dynamic Product Pages - Priority: high - Status: completed
-- [x] Search & Filter (Client-side) - Priority: medium - Status: completed
-- [x] Cart Persistence - Priority: high - Status: completed
-- [x] Profile & Order Mocking - Priority: medium - Status: completed
-- [x] Define API Contract - Priority: high - Status: completed
-- [x] Setup API Client - Priority: high - Status: completed
-- [x] TanStack Query Integration - Priority: high - Status: completed
-- [x] Loading & Error States - Priority: medium - Status: completed
-- [x] Env Configuration - Priority: medium - Status: completed
+- [x] Setup API Environment Configuration - Priority: high - Status: completed
+- [x] Setup API Gateway Client (Supabase + Axios) - Priority: high - Status: completed
+- [ ] Initialize Prisma - Priority: high - Status: pending
+- [ ] Define Database Schema (User, Product, Order) - Priority: high - Status: pending
+- [ ] Implement JWT Authentication Flow (Supabase Auth) - Priority: high - Status: pending
+- [ ] Refactor Hooks to use Real API - Priority: high - Status: pending
+- [ ] Implement Route Protection (Auth Guard) - Priority: medium - Status: pending
+- [ ] Implement Global API Error Handling - Priority: medium - Status: pending
