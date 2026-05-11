@@ -41,7 +41,7 @@ export default function CheckoutPage() {
               <label className="text-sm font-medium text-gray-700">Address</label>
               <input type="text" className="w-full p-4 border border-[#CCCCCC] rounded-sm focus:border-[#AB4227] focus:outline-none transition-colors" />
             </div>
-            <button className="w-full bg-[#212529] text-white py-4 font-serif font-bold uppercase tracking-widest hover:bg-[#AB4227] transition-all rounded-sm">
+            <button className="w-full bg-[#AB4227] text-white py-4 font-serif font-bold uppercase tracking-widest hover:bg-[#8e3620] transition-all rounded-sm">
                 Place Order
             </button>
           </div>
