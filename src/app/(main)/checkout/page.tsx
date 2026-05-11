@@ -6,26 +6,45 @@ export default function CheckoutPage() {
   const total = items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 
   return (
-    <div className="container mx-auto px-8 py-16">
-      <h1 className="text-[32px] font-serif font-bold mb-8 text-[#212529]">Checkout</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-        <div className="space-y-4">
-          <h2 className="text-[22px] font-serif font-medium">Order Summary</h2>
-          {items.map((item) => (
-            <div key={item.id} className="flex justify-between border-b pb-2">
-              <span>{item.name} x {item.quantity}</span>
-              <span>${item.price * item.quantity}</span>
-            </div>
-          ))}
-          <div className="font-bold text-[18px]">Total: ${total}</div>
+    <div className="container mx-auto px-4 md:px-8 py-16">
+      <h1 className="text-[40px] font-serif font-bold mb-12 text-[#212529] tracking-tighter text-center">Checkout</h1>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
+        {/* Order Summary */}
+        <div className="space-y-8">
+          <h2 className="text-[24px] font-serif font-medium pb-4 border-b border-[#E5E5E5]">Order Summary</h2>
+          
+          <div className="space-y-4">
+            {items.map((item) => (
+              <div key={item.id} className="flex justify-between items-center text-[16px] font-serif text-[#212529]">
+                <span className="text-gray-600">{item.name} <span className="text-black font-semibold">x{item.quantity}</span></span>
+                <span className="font-semibold">${(item.price * item.quantity).toFixed(2)}</span>
+              </div>
+            ))}
+          </div>
+          
+          <div className="border-t border-[#E5E5E5] pt-6 flex justify-between items-center text-[20px] font-serif font-bold text-[#212529]">
+            <span>Total</span>
+            <span>${total.toFixed(2)}</span>
+          </div>
         </div>
-        <div className="space-y-4">
-            <h2 className="text-[22px] font-serif font-medium">Shipping Details</h2>
-            <input type="text" placeholder="Full Name" className="w-full p-3 border border-[#CCCCCC] rounded-[4px]" />
-            <input type="text" placeholder="Address" className="w-full p-3 border border-[#CCCCCC] rounded-[4px]" />
-            <button className="w-full bg-[#AB4227] text-white py-3 font-serif hover:bg-[#B7472A]">
+
+        {/* Shipping Details */}
+        <div className="space-y-8 bg-gray-50 p-8 rounded-sm border border-[#E5E5E5]">
+          <h2 className="text-[24px] font-serif font-medium">Shipping Details</h2>
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Full Name</label>
+              <input type="text" className="w-full p-4 border border-[#CCCCCC] rounded-sm focus:border-[#AB4227] focus:outline-none transition-colors" />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700">Address</label>
+              <input type="text" className="w-full p-4 border border-[#CCCCCC] rounded-sm focus:border-[#AB4227] focus:outline-none transition-colors" />
+            </div>
+            <button className="w-full bg-[#212529] text-white py-4 font-serif font-bold uppercase tracking-widest hover:bg-[#AB4227] transition-all rounded-sm">
                 Place Order
             </button>
+          </div>
         </div>
       </div>
     </div>
