@@ -27,8 +27,8 @@ export function Header() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-            <span className="border-l border-white/20 pl-4">SIGN UP</span>
-            <span>LOG IN</span>
+            <Link href="/register" className="border-l border-white/20 pl-4 hover:underline">SIGN UP</Link>
+            <Link href="/login" className="hover:underline">LOG IN</Link>
           </div>
         </div>
       </div>
@@ -68,6 +68,8 @@ export function Header() {
         {/* Mobile Nav */}
         {isOpen && (
           <nav className="md:hidden bg-white border-b border-[#CCCCCC] p-4 flex flex-col gap-4 text-[16px] font-medium font-serif text-[#212529]">
+            <Link href="/register" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">SIGN UP</Link>
+            <Link href="/login" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">LOG IN</Link>
             <Link href="/" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">HOME</Link>
             <Link href="/about" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">ABOUT</Link>
             <Link href="/shop" onClick={() => setIsOpen(false)} className="hover:text-[#AB4227]">PRODUCTS</Link>
