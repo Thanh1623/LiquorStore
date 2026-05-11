@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import Loading from '../ui/Loading';
+import { Loading } from '../ui/Loading';
 
 export default function ProtectedLayout({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
