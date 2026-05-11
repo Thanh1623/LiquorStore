@@ -99,9 +99,9 @@ KHÔNG viết code, KHÔNG scaffold, KHÔNG implement cho đến khi có file sp
 
 ## Phase & Task
 
-- **Current Phase:** Phase 2 — Frontend & Mock Data Integration
+- **Current Phase:** Phase 4 — Testing & Deployment Readiness
 - **Tasks:** xem `tasks/todo.md`
-- **Phase details:** xem `docs/phases/phase-1.md`
+- **Phase details:** xem `docs/phases/phase-4.md`
 
 ---
 

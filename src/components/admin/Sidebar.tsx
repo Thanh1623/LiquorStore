@@ -1,0 +1,37 @@
+import Link from 'next/link';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut } from 'lucide-react';
+
+export function Sidebar() {
+  return (
+    <aside className="w-64 h-screen bg-slate-950 text-slate-200 flex flex-col p-6 border-r border-slate-800">
+      <div className="mb-10">
+        <h1 className="text-2xl font-serif text-yellow-600 tracking-wider">LuxeAdmin</h1>
+      </div>
+      
+      <nav className="flex-1 space-y-4">
+        {[
+          { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
+          { icon: Package, label: 'Products', href: '/admin/products' },
+          { icon: ShoppingBag, label: 'Orders', href: '/admin/orders' },
+          { icon: Settings, label: 'Settings', href: '/admin/settings' },
+        ].map((item) => (
+          <Link 
+            key={item.label} 
+            href={item.href}
+            className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-900 hover:text-yellow-500 transition-colors"
+          >
+            <item.icon size={20} />
+            <span className="font-light tracking-wide">{item.label}</span>
+          </Link>
+        ))}
+      </nav>
+
+      <div className="mt-auto">
+        <button className="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-red-400 transition-colors">
+          <LogOut size={20} />
+          <span className="font-light">Logout</span>
+        </button>
+      </div>
+    </aside>
+  );
+}
