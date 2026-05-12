@@ -8,8 +8,10 @@ import { register as registerAction } from "@/app/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useRouter } from "next/navigation";
 
 export function RegisterForm() {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -28,7 +30,7 @@ export function RegisterForm() {
     if (result?.error) {
       setError("root", { message: result.error });
     } else {
-      window.location.href = '/login';
+      router.push('/login');
     }
   };
 

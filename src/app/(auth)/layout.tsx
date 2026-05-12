@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 export default function AuthLayout({
   children,
 }: {
@@ -7,10 +9,11 @@ export default function AuthLayout({
     <div className="flex min-h-screen bg-[#1A1A1A] text-white">
       {/* Left side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative">
-        <img
+        <Image
           src="https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?q=80&w=2000&auto=format&fit=crop"
           alt="Luxury liquor background"
-          className="absolute inset-0 w-full h-full object-cover"
+          fill
+          className="absolute inset-0 object-cover"
         />
         <div className="absolute inset-0 bg-black/60" />
       </div>

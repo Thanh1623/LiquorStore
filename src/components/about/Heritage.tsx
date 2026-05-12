@@ -14,7 +14,7 @@ export function Heritage() {
         </div>
         <div className="space-y-6">
           <h2 className="text-4xl font-serif font-bold text-[#212529]">A Century of Craft</h2>
-          <p className="text-gray-600 leading-relaxed italic">"Tradition is not the worship of ashes, but the preservation of fire."</p>
+          <p className="text-gray-600 leading-relaxed italic">&ldquo;Tradition is not the worship of ashes, but the preservation of fire.&rdquo;</p>
           <p className="text-gray-700 leading-relaxed">
             Founded in 1905, our journey began with a simple passion for perfection. 
             Through generations, we have honored the time-tested techniques while embracing innovation to bring you the finest spirits.

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Star, Minus, Plus } from "lucide-react";
+import { Product } from "@/lib/mock-data";
 
-export function ProductDetail({ product }: { product: any }) {
+export function ProductDetail({ product }: { product: Product }) {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
 

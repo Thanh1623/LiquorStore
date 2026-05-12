@@ -21,7 +21,7 @@ export function useProducts() {
 
       if (error) throw error;
       
-      return (data as any[]).map(p => ({
+      return (data as { id: string, name: string, price: number, category: string, image_url: string | null, description: string | null, stock_quantity: number }[]).map(p => ({
         ...p,
         image: p.image_url,
         price: Number(p.price)

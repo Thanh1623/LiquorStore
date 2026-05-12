@@ -16,7 +16,7 @@ export default function ContactPage() {
             </p>
           </div>
           <div className="space-y-4">
-            <h2 className="text-[22px] font-medium text-[#212529]">Let's Talk</h2>
+             <h2 className="text-[22px] font-medium text-[#212529]">Let&apos;s Talk</h2>
             <p className="text-[16px] text-[#808080] leading-relaxed">
               Phone: +00 1234 567<br />
               Email: hello@liquorstore.com

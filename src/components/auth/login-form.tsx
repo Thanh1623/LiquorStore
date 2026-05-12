@@ -24,7 +24,7 @@ export function LoginForm() {
     formData.append('email', data.email);
     formData.append('password', data.password);
     
-    const result = await loginAction(formData);
+    const result = await loginAction({ error: '' }, formData);
     if (result?.error) {
       setError("root", { message: result.error });
     }

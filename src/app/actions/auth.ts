@@ -4,18 +4,30 @@ import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 
-export async function login(formData: FormData) {
+export async function login(_prevState: { error: string }, formData: FormData) {
   const supabase = await createClient()
 
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  // 1. Tìm người dùng theo email
+  const { data: user, error } = await supabase
+    .from('User')
+    .select('*')
+    .eq('email', email)
+    .single()
+
+  if (error || !user) {
+    return { error: 'Email hoặc mật khẩu không đúng' }
   }
 
-  // NOTE: For login, we will need to implement custom logic 
-  // to check the password in the User table since we are bypassing Auth.
-  // This is a placeholder for now.
-  
+  // 2. Kiểm tra mật khẩu (đang là plain text)
+  if (user.password !== password) {
+    return { error: 'Email hoặc mật khẩu không đúng' }
+  }
+
+  // 3. Đăng nhập thành công
+  revalidatePath('/', 'layout')
   redirect('/')
 }
 

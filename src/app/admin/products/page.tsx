@@ -33,7 +33,7 @@ export default function ProductManagement() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="font-serif text-xl">Inventory</CardTitle>
             <Dialog>
-              <DialogTrigger asChild>
+              <DialogTrigger>
                 <Button className="bg-slate-950 text-white hover:bg-slate-800 font-light tracking-wide">Add Product</Button>
               </DialogTrigger>
               <DialogContent className="sm:max-w-[425px]">
