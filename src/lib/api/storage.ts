@@ -1,33 +1,35 @@
-import { supabase } from '@/lib/supabase/client';
-
-const BUCKET_NAME = 'product-images';
-
 export const uploadProductImage = async (file: File): Promise<{ url: string; error: string | null }> => {
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-  const filePath = `products/${fileName}`;
+  const formData = new FormData();
+  formData.append('file', file);
 
-  const { error: uploadError } = await supabase.storage
-    .from(BUCKET_NAME)
-    .upload(filePath, file);
+  const response = await fetch('/api/storage/product-images', {
+    method: 'POST',
+    body: formData,
+  });
 
-  if (uploadError) {
-    return { url: '', error: uploadError.message };
+  const payload = await response.json();
+
+  if (!response.ok) {
+    return { url: '', error: payload?.error ?? 'Upload failed' };
   }
 
-  const { data } = supabase.storage.from(BUCKET_NAME).getPublicUrl(filePath);
-  
-  return { url: data.publicUrl, error: null };
+  return { url: payload.data.url as string, error: null };
 };
 
 export const deleteProductImage = async (url: string): Promise<{ error: string | null }> => {
-  const path = url.split(`${BUCKET_NAME}/`)?.[1];
+  const response = await fetch('/api/storage/product-images', {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ url }),
+  });
 
-  if (!path) {
-    return { error: 'Invalid URL' };
+  const payload = await response.json();
+
+  if (!response.ok) {
+    return { error: payload?.error ?? 'Delete failed' };
   }
 
-  const { error } = await supabase.storage.from(BUCKET_NAME).remove([path]);
-
-  return { error: error?.message ?? null };
+  return { error: null };
 };
