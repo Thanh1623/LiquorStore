@@ -140,6 +140,7 @@ export default function ProductManagement() {
   const [editImagePreview, setEditImagePreview] = useState('');
   const [newImageName, setNewImageName] = useState('No file selected');
   const [editImageName, setEditImageName] = useState('No file selected');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
   const [toast, setToast] = useState<ToastState>({
     open: false,
     title: '',
@@ -166,6 +167,12 @@ export default function ProductManagement() {
   }, [toast.open]);
 
   const productList = useMemo(() => response?.data ?? [], [response]);
+  const filteredProducts = useMemo(() => {
+    if (selectedCategoryFilter === 'all') {
+      return productList;
+    }
+    return productList.filter((product) => product.categoryId === selectedCategoryFilter);
+  }, [productList, selectedCategoryFilter]);
 
   const setNextPreview = (currentPreview: string, nextFile: File | null, fallback = '') => {
     revokePreviewUrl(currentPreview);
@@ -367,19 +374,30 @@ export default function ProductManagement() {
         <Card className="border-amber-200/70 bg-white/95 shadow-[0_15px_45px_rgba(120,53,15,0.12)] backdrop-blur">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="text-xl text-amber-950">Inventory</CardTitle>
-            <Dialog
-              open={isAddDialogOpen}
-              onOpenChange={(open) => {
-                setIsAddDialogOpen(open);
-                if (!open) {
-                  resetAddForm();
-                }
-              }}
-            >
-              <DialogTrigger asChild>
-                <Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Product</Button>
-              </DialogTrigger>
-              <DialogContent className="flex max-h-[90vh] flex-col border-amber-200 bg-gradient-to-b from-amber-50/80 to-white sm:max-w-[560px]">
+            <div className="flex items-center gap-3">
+              <select
+                value={selectedCategoryFilter}
+                onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+                className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm text-amber-900"
+              >
+                <option value="all">All categories</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+              <Dialog
+                open={isAddDialogOpen}
+                onOpenChange={(open) => {
+                  setIsAddDialogOpen(open);
+                  if (!open) {
+                    resetAddForm();
+                  }
+                }}
+              >
+                <DialogTrigger asChild>
+                  <Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Product</Button>
+                </DialogTrigger>
+                <DialogContent className="flex max-h-[90vh] flex-col border-amber-200 bg-gradient-to-b from-amber-50/80 to-white sm:max-w-[560px]">
                 <DialogHeader>
                   <DialogTitle>Add New Product</DialogTitle>
                 </DialogHeader>
@@ -440,8 +458,9 @@ export default function ProductManagement() {
                     {isSubmitting ? 'Saving...' : 'Save Product'}
                   </Button>
                 </DialogFooter>
-              </DialogContent>
-            </Dialog>
+                </DialogContent>
+              </Dialog>
+            </div>
           </CardHeader>
 
           <CardContent>
@@ -460,7 +479,7 @@ export default function ProductManagement() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {productList.map((product) => (
+                  {filteredProducts.map((product) => (
                     <TableRow key={product.id}>
                       <TableCell>{product.name}</TableCell>
                       <TableCell>{product.categoryName}</TableCell>

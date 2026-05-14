@@ -1,6 +1,6 @@
 import api from './api-client';
 import { ApiResponse } from '@/types/api';
-import { Category, CreateCategoryInput, UpdateCategoryInput } from '@/types/category';
+import { Category, CreateCategoryInput, DeleteCategoryInput, UpdateCategoryInput } from '@/types/category';
 
 export const getCategories = async (): Promise<ApiResponse<Category[]>> => {
   const response = await api.get<ApiResponse<Category[]>>('/categories');
@@ -17,7 +17,9 @@ export const updateCategory = async ({ id, ...payload }: UpdateCategoryInput): P
   return response.data;
 };
 
-export const deleteCategory = async (id: string): Promise<ApiResponse<null>> => {
-  const response = await api.delete<ApiResponse<null>>(`/categories/${id}`);
+export const deleteCategory = async ({ id, replacementCategoryId }: DeleteCategoryInput): Promise<ApiResponse<null>> => {
+  const response = await api.delete<ApiResponse<null>>(`/categories/${id}`, {
+    data: replacementCategoryId ? { replacementCategoryId } : undefined,
+  });
   return response.data;
 };

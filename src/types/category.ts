@@ -12,3 +12,8 @@ export interface UpdateCategoryInput {
   id: string;
   name: string;
 }
+
+export interface DeleteCategoryInput {
+  id: string;
+  replacementCategoryId?: string;
+}

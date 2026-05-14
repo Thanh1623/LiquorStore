@@ -23,6 +23,10 @@ export default function CategoryManagementPage() {
   const [editName, setEditName] = useState('');
   const [createError, setCreateError] = useState('');
   const [tableError, setTableError] = useState('');
+  const [isReassignOpen, setIsReassignOpen] = useState(false);
+  const [pendingDeleteCategoryId, setPendingDeleteCategoryId] = useState('');
+  const [pendingDeleteCategoryName, setPendingDeleteCategoryName] = useState('');
+  const [replacementCategoryId, setReplacementCategoryId] = useState('');
 
   const categories = response?.data ?? [];
 
@@ -59,17 +63,51 @@ export default function CategoryManagementPage() {
     }
   };
 
-  const removeCategory = async (id: string, categoryName: string) => {
+  const executeDelete = async (id: string, replacementId?: string) => {
+    await deleteCategory.mutateAsync({ id, replacementCategoryId: replacementId });
+  };
+
+  const removeCategory = async (id: string, categoryName: string, productCount: number) => {
+    if (productCount > 0) {
+      setPendingDeleteCategoryId(id);
+      setPendingDeleteCategoryName(categoryName);
+      setReplacementCategoryId('');
+      setIsReassignOpen(true);
+      return;
+    }
+
     if (!confirm(`Delete category ${categoryName}?`)) {
       return;
     }
+
     try {
-      await deleteCategory.mutateAsync(id);
+      await executeDelete(id);
     } catch (e) {
       if (axios.isAxiosError(e) && e.response?.status === 409) {
-        setTableError('Category này đang có sản phẩm, vui lòng chuyển hoặc xóa sản phẩm trước khi xóa category.');
+        setTableError('Category này đang có sản phẩm, hãy chọn category thay thế để chuyển sản phẩm trước khi xóa.');
         return;
       }
+      setTableError(e instanceof Error ? e.message : 'Delete category failed');
+    }
+  };
+
+  const submitReassignAndDelete = async () => {
+    if (!pendingDeleteCategoryId) {
+      return;
+    }
+    if (!replacementCategoryId) {
+      setTableError('Vui lòng chọn category thay thế.');
+      return;
+    }
+
+    try {
+      await executeDelete(pendingDeleteCategoryId, replacementCategoryId);
+      setIsReassignOpen(false);
+      setPendingDeleteCategoryId('');
+      setPendingDeleteCategoryName('');
+      setReplacementCategoryId('');
+      setTableError('');
+    } catch (e) {
       setTableError(e instanceof Error ? e.message : 'Delete category failed');
     }
   };
@@ -138,7 +176,7 @@ export default function CategoryManagementPage() {
                         ) : (
                           <>
                             <Button variant="ghost" size="sm" onClick={() => { setEditId(category.id); setEditName(category.name); setTableError(''); }}>Edit</Button>
-                            <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800" onClick={() => removeCategory(category.id, category.name)}>
+                            <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800" onClick={() => removeCategory(category.id, category.name, category.productCount ?? 0)}>
                               Delete
                             </Button>
                           </>
@@ -151,6 +189,53 @@ export default function CategoryManagementPage() {
             )}
           </CardContent>
         </Card>
+
+        <Dialog
+          open={isReassignOpen}
+          onOpenChange={(open) => {
+            setIsReassignOpen(open);
+            if (!open) {
+              setPendingDeleteCategoryId('');
+              setPendingDeleteCategoryName('');
+              setReplacementCategoryId('');
+            }
+          }}
+        >
+          <DialogContent className="sm:max-w-[480px]">
+            <DialogHeader>
+              <DialogTitle>Reassign Products Before Delete</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-3 py-2">
+              <p className="text-sm text-slate-600">
+                Category <span className="font-semibold text-slate-900">{pendingDeleteCategoryName}</span> has products.
+                Select another category to move those products before deletion.
+              </p>
+              <Label>Replacement Category</Label>
+              <select
+                value={replacementCategoryId}
+                onChange={(e) => { setReplacementCategoryId(e.target.value); setTableError(''); }}
+                className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm"
+              >
+                <option value="">Select category</option>
+                {categories
+                  .filter((category) => category.id !== pendingDeleteCategoryId)
+                  .map((category) => (
+                    <option key={category.id} value={category.id}>{category.name}</option>
+                  ))}
+              </select>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsReassignOpen(false)}>Cancel</Button>
+              <Button
+                className="bg-amber-900 text-amber-50 hover:bg-amber-800"
+                onClick={submitReassignAndDelete}
+                disabled={deleteCategory.isPending}
+              >
+                Reassign & Delete
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </main>
     </div>
   );
