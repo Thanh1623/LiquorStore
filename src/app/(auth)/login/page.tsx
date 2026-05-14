@@ -12,6 +12,11 @@ export default function LoginPage() {
           Create Account
         </Link>
       </p>
+      <div className="text-center mt-4">
+        <Link href="/" className="text-xs text-neutral-400 hover:text-neutral-900 font-serif uppercase tracking-widest">
+          ← Back to Home
+        </Link>
+      </div>
     </div>
   );
 }
