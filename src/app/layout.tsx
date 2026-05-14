@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, Spectral } from "next/font/google";
 import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { Toaster } from "@/components/ui/sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +35,10 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} ${spectral.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-serif">
+      <body className="min-h-full flex flex-col font-serif bg-neutral-50 text-neutral-900">
         <Providers>
           {children}
+          <Toaster />
         </Providers>
       </body>
     </html>

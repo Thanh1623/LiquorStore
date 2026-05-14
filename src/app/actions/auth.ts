@@ -1,8 +1,9 @@
 'use server'
-
+import 'server-only'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
+import bcrypt from 'bcryptjs'
 
 export async function login(_prevState: { error: string }, formData: FormData) {
   const supabase = await createClient()
@@ -21,8 +22,9 @@ export async function login(_prevState: { error: string }, formData: FormData) {
     return { error: 'Email hoặc mật khẩu không đúng' }
   }
 
-  // 2. Kiểm tra mật khẩu (đang là plain text)
-  if (user.password !== password) {
+  // 2. Kiểm tra mật khẩu (đã hash)
+  const isPasswordValid = await bcrypt.compare(password, user.password)
+  if (!isPasswordValid) {
     return { error: 'Email hoặc mật khẩu không đúng' }
   }
 
@@ -31,35 +33,42 @@ export async function login(_prevState: { error: string }, formData: FormData) {
   redirect('/')
 }
 
-export async function register(formData: FormData) {
+export async function register(_prevState: { error?: string }, formData: FormData) {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string 
 
-  console.log('DEBUG - Đang lưu trực tiếp vào bảng User với email:', email);
+  // 1. Kiểm tra xem người dùng đã tồn tại chưa
+  const { data: existingUser } = await supabase
+    .from('User')
+    .select('id')
+    .eq('email', email)
+    .single()
 
-  // CẢNH BÁO BẢO MẬT: Mật khẩu này đang được lưu ở dạng văn bản thuần (plain text).
-  // TRONG MÔI TRƯỜNG PRODUCTION, BẠN PHẢI HASH MẬT KHẨU (ví dụ dùng bcrypt) TRƯỚC KHI LƯU VÀO DATABASE.
-  const { data, error: dbError } = await supabase
+  if (existingUser) {
+    return { error: 'Email đã được sử dụng' };
+  }
+
+  // 2. Hash mật khẩu
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // 3. Lưu người dùng vào database
+  const { error: dbError } = await supabase
     .from('User')
     .insert([
       { 
         email: email, 
-        password: password, 
+        password: hashedPassword, 
         role: 'user'
       }
     ])
-    .select();
 
   if (dbError) {
-    console.error('DEBUG - LỖI LƯU VÀO BẢNG USER:', dbError);
     return { error: `Database error: ${dbError.message}` };
   }
 
-  console.log('DEBUG - Đã lưu thành công vào bảng User:', data);
-
-  redirect('/login')
+  return { success: true };
 }
 
 export async function signOut() {

@@ -6,7 +6,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-screen bg-[#1A1A1A] text-white">
+    <div className="flex min-h-screen bg-neutral-50 text-neutral-900">
       {/* Left side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative">
         <Image
@@ -15,15 +15,15 @@ export default function AuthLayout({
           fill
           className="absolute inset-0 object-cover"
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-neutral-900/20" />
       </div>
 
       {/* Right side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-serif font-bold tracking-tighter">LIQUOR STORE</h1>
-            <p className="text-sm text-gray-400 mt-2 font-serif">Premium spirits experience</p>
+            <h1 className="text-3xl font-serif tracking-widest uppercase">Liquor Store</h1>
+            <p className="text-sm text-neutral-500 mt-2 font-serif">Premium spirits experience</p>
           </div>
           {children}
         </div>

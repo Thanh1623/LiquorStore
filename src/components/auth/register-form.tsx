@@ -9,13 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export function RegisterForm() {
   const router = useRouter();
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     setError,
   } = useForm<z.infer<typeof registerSchema>>({
     resolver: zodResolver(registerSchema),
@@ -26,58 +27,55 @@ export function RegisterForm() {
     formData.append('email', data.email);
     formData.append('password', data.password);
     
-    const result = await registerAction(formData);
+    const result = await registerAction({}, formData);
     if (result?.error) {
       setError("root", { message: result.error });
-    } else {
+      toast.error(result.error);
+    } else if (result?.success) {
+      toast.success("Account created successfully. Please sign in.");
       router.push('/login');
     }
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-      <div className="space-y-2">
-        <Label htmlFor="name" className="text-gray-300 font-serif">Full Name</Label>
-        <Input 
-          id="name" 
-          {...register("name")} 
-          className="bg-transparent border-white/20 focus:border-white/50 rounded-none"
-        />
-        {errors.name && <p className="text-sm text-red-400">{errors.name.message}</p>}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="email" className="text-gray-300 font-serif">Email Address</Label>
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+      <div className="space-y-1">
+        <Label htmlFor="email" className="text-neutral-600 font-serif text-xs tracking-wide uppercase">Email Address</Label>
         <Input 
           id="email" 
           {...register("email")} 
           type="email" 
-          className="bg-transparent border-white/20 focus:border-white/50 rounded-none"
+          className="bg-white border-neutral-300 focus:border-neutral-900 rounded-none h-10 shadow-none transition-colors"
         />
-        {errors.email && <p className="text-sm text-red-400">{errors.email.message}</p>}
+        {errors.email && <p className="text-xs text-red-600 font-serif">{errors.email.message}</p>}
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="password" className="text-gray-300 font-serif">Password</Label>
+      <div className="space-y-1">
+        <Label htmlFor="password" className="text-neutral-600 font-serif text-xs tracking-wide uppercase">Password</Label>
         <Input 
           id="password" 
           {...register("password")} 
           type="password" 
-          className="bg-transparent border-white/20 focus:border-white/50 rounded-none"
+          className="bg-white border-neutral-300 focus:border-neutral-900 rounded-none h-10 shadow-none transition-colors"
         />
-        {errors.password && <p className="text-sm text-red-400">{errors.password.message}</p>}
+        {errors.password && <p className="text-xs text-red-600 font-serif">{errors.password.message}</p>}
       </div>
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword" className="text-gray-300 font-serif">Confirm Password</Label>
+      <div className="space-y-1">
+        <Label htmlFor="confirmPassword" className="text-neutral-600 font-serif text-xs tracking-wide uppercase">Confirm Password</Label>
         <Input 
           id="confirmPassword" 
           {...register("confirmPassword")} 
           type="password" 
-          className="bg-transparent border-white/20 focus:border-white/50 rounded-none"
+          className="bg-white border-neutral-300 focus:border-neutral-900 rounded-none h-10 shadow-none transition-colors"
         />
-        {errors.confirmPassword && <p className="text-sm text-red-400">{errors.confirmPassword.message}</p>}
-        {errors.root && <p className="text-sm text-red-400">{errors.root.message}</p>}
+        {errors.confirmPassword && <p className="text-xs text-red-600 font-serif">{errors.confirmPassword.message}</p>}
       </div>
-      <Button type="submit" className="w-full rounded-none bg-white text-black hover:bg-gray-200 font-serif uppercase tracking-widest">
-        Create Account
+      
+      <Button 
+        type="submit" 
+        disabled={isSubmitting}
+        className="w-full rounded-none bg-neutral-900 text-white hover:bg-neutral-800 font-serif uppercase tracking-widest h-10 disabled:opacity-50 mt-2"
+      >
+        {isSubmitting ? "Processing..." : "Create Account"}
       </Button>
     </form>
   );
