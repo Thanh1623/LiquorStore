@@ -1,38 +1,40 @@
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase/client';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getProducts, createProduct, updateProduct, deleteProduct } from '@/lib/api/products';
+import { CreateProductInput, UpdateProductInput } from '@/types/product';
 
-export interface Product {
-  id: string;
-  name: string;
-  price: number;
-  category: string;
-  image_url: string | null;
-  description: string | null;
-  stock_quantity: number;
-}
-
-export function useProducts() {
-  const query = useQuery({
+export const useProducts = () => {
+  return useQuery({
     queryKey: ['products'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('Product')
-        .select('*');
+    queryFn: getProducts,
+  });
+};
 
-      if (error) throw error;
-      
-      return (data as { id: string, name: string, price: number, category: string, image_url: string | null, description: string | null, stock_quantity: number }[]).map(p => ({
-        ...p,
-        image: p.image_url,
-        price: Number(p.price)
-      })) as Product[];
+export const useCreateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: CreateProductInput) => createProduct(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
     },
   });
+};
 
-  // Global Error Logging/Handling can be added here
-  if (query.error) {
-    console.error('Error fetching products:', query.error);
-  }
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: UpdateProductInput) => updateProduct(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+};
 
-  return query;
-}
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteProduct,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+  });
+};
