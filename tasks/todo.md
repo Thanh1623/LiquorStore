@@ -1,8 +1,7 @@
 # Tasks Todo
 
-- [x] Create Category API routes (GET/POST/PUT/DELETE) with delete guard - Priority: high - Status: completed
-- [x] Add Admin Categories page and sidebar navigation - Priority: high - Status: completed
-- [x] Refactor Product Management to use category select by `categoryId` - Priority: high - Status: completed
-- [x] Replace upload alerts with luxury toast UX - Priority: medium - Status: completed
-- [x] Add migration flow when deleting category with products (reassign category) - Priority: medium - Status: completed
-- [x] Add category filters in product table - Priority: low - Status: completed
+- [x] Orders API: list/filter/pagination + detail + status update - Priority: high - Status: completed
+- [x] Orders UI: real data table, filter, detail modal, status actions - Priority: high - Status: completed
+- [x] Dashboard API: summary KPIs + revenue series (6 months) - Priority: high - Status: completed
+- [x] Dashboard UI: replace mock cards/chart with real API - Priority: high - Status: completed
+- [ ] Add reusable admin loading/error states for orders/dashboard - Priority: medium - Status: pending

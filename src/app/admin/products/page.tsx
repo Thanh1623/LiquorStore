@@ -394,9 +394,9 @@ export default function ProductManagement() {
                   }
                 }}
               >
-                <DialogTrigger asChild>
-                  <Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Product</Button>
-                </DialogTrigger>
+                <DialogTrigger
+                render={<Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Product</Button>}
+              />
                 <DialogContent className="flex max-h-[90vh] flex-col border-amber-200 bg-gradient-to-b from-amber-50/80 to-white sm:max-w-[560px]">
                 <DialogHeader>
                   <DialogTitle>Add New Product</DialogTitle>
@@ -500,7 +500,7 @@ export default function ProductManagement() {
                         )}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="sm" onClick={() => startEdit(product)}>Edit</Button>
+                        <button type="button" className="text-sm font-medium text-amber-900 hover:text-amber-700" onClick={() => startEdit(product)}>Edit</button>
                         <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800" onClick={() => handleDeleteProduct(product)}>Delete</Button>
                       </TableCell>
                     </TableRow>

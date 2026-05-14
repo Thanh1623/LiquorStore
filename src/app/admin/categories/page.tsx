@@ -125,9 +125,9 @@ export default function CategoryManagementPage() {
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl text-amber-950">Categories</CardTitle>
             <Dialog open={isOpen} onOpenChange={(open) => { setIsOpen(open); if (!open) { setName(''); setCreateError(''); } }}>
-              <DialogTrigger asChild>
-                <Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Category</Button>
-              </DialogTrigger>
+              <DialogTrigger
+                render={<Button className="bg-amber-900 text-amber-50 hover:bg-amber-800">Add Category</Button>}
+              />
               <DialogContent className="sm:max-w-[460px]">
                 <DialogHeader>
                   <DialogTitle>Add Category</DialogTitle>
