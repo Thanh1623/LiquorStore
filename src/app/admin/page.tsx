@@ -4,12 +4,25 @@ import { Sidebar } from '@/components/admin/Sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { useDashboardSummary, useRevenueSeries } from '@/hooks/useDashboard';
+import { AdminErrorState, AdminLoadingState } from '@/components/admin/AdminDataState';
 
 const currency = (value: number) => `$${value.toLocaleString()}`;
 
 export default function AdminDashboard() {
-  const { data: summaryResponse, isLoading: summaryLoading } = useDashboardSummary();
-  const { data: revenueResponse, isLoading: revenueLoading } = useRevenueSeries();
+  const {
+    data: summaryResponse,
+    isLoading: summaryLoading,
+    isError: summaryError,
+    error: summaryErrorData,
+    refetch: refetchSummary,
+  } = useDashboardSummary();
+  const {
+    data: revenueResponse,
+    isLoading: revenueLoading,
+    isError: revenueError,
+    error: revenueErrorData,
+    refetch: refetchRevenue,
+  } = useRevenueSeries();
 
   const summary = summaryResponse?.data;
   const revenue = revenueResponse?.data ?? [];
@@ -50,13 +63,33 @@ export default function AdminDashboard() {
           </Card>
         </div>
 
+        {summaryError ? (
+          <div className="mb-10">
+            <AdminErrorState
+              title="Failed to load dashboard summary"
+              message={summaryErrorData instanceof Error ? summaryErrorData.message : 'Please try again.'}
+              onRetry={() => {
+                void refetchSummary();
+              }}
+            />
+          </div>
+        ) : null}
+
         <Card className="border-slate-200 shadow-sm">
           <CardHeader>
             <CardTitle className="text-xl">Revenue Overview (6 months)</CardTitle>
           </CardHeader>
           <CardContent className="h-[350px]">
             {revenueLoading ? (
-              <p>Loading chart...</p>
+              <AdminLoadingState label="Loading revenue chart..." />
+            ) : revenueError ? (
+              <AdminErrorState
+                title="Failed to load revenue chart"
+                message={revenueErrorData instanceof Error ? revenueErrorData.message : 'Please try again.'}
+                onRetry={() => {
+                  void refetchRevenue();
+                }}
+              />
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={revenue}>

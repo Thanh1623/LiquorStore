@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useOrderDetail, useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
 import { OrderStatus } from '@/types/order';
+import { AdminErrorState, AdminLoadingState } from '@/components/admin/AdminDataState';
 
 const statusStyle: Record<OrderStatus, string> = {
   pending: 'bg-amber-50 text-amber-700 border border-amber-200',
@@ -23,8 +24,20 @@ export default function OrderManagement() {
   const [search, setSearch] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState('');
 
-  const { data: ordersResponse, isLoading } = useOrders({ page, pageSize, status, search });
-  const { data: detailResponse, isLoading: isDetailLoading } = useOrderDetail(selectedOrderId);
+  const {
+    data: ordersResponse,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useOrders({ page, pageSize, status, search });
+  const {
+    data: detailResponse,
+    isLoading: isDetailLoading,
+    isError: isDetailError,
+    error: detailError,
+    refetch: refetchDetail,
+  } = useOrderDetail(selectedOrderId);
   const updateStatus = useUpdateOrderStatus();
 
   const orderData = ordersResponse?.data;
@@ -75,7 +88,15 @@ export default function OrderManagement() {
           </CardHeader>
           <CardContent>
             {isLoading ? (
-              <p>Loading orders...</p>
+              <AdminLoadingState label="Loading orders..." />
+            ) : isError ? (
+              <AdminErrorState
+                title="Failed to load orders"
+                message={error instanceof Error ? error.message : 'Please try again.'}
+                onRetry={() => {
+                  void refetch();
+                }}
+              />
             ) : (
               <>
                 <Table>
@@ -139,7 +160,15 @@ export default function OrderManagement() {
               <DialogTitle>Order Detail</DialogTitle>
             </DialogHeader>
             {isDetailLoading ? (
-              <p>Loading order detail...</p>
+              <AdminLoadingState label="Loading order detail..." />
+            ) : isDetailError ? (
+              <AdminErrorState
+                title="Failed to load order detail"
+                message={detailError instanceof Error ? detailError.message : 'Please try again.'}
+                onRetry={() => {
+                  void refetchDetail();
+                }}
+              />
             ) : detailResponse?.data ? (
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
