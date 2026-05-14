@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Product } from '@/lib/mock-data';
+import { Product } from '@/types/product';
 
 interface CartItem extends Product {
   quantity: number;

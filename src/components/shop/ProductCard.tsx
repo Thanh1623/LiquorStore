@@ -1,14 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, Heart, Eye } from "lucide-react";
-
-interface Product {
-  id: string;
-  name: string;
-  category: string;
-  price: number;
-  image: string;
-}
+import { Product } from "@/types/product";
 
 interface ProductCardProps {
   product: Product;
@@ -21,7 +14,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="relative aspect-[2/3] w-2/3 mx-auto overflow-hidden bg-white border border-gray-100 mb-6">
         <Link href={`/shop/${product.id}`}>
           <Image
-            src={product.image}
+            src={product.imageUrl}
             alt={product.name}
             fill
             className="object-contain p-4 transition-transform duration-700 group-hover:scale-105"
@@ -47,7 +40,7 @@ export function ProductCard({ product }: ProductCardProps) {
       
       {/* Product Details - Minimalist */}
       <Link href={`/shop/${product.id}`} className="space-y-1 block">
-        <p className="text-[#AB4227] italic font-serif text-sm tracking-wide text-center">{product.category}</p>
+        <p className="text-[#AB4227] italic font-serif text-sm tracking-wide text-center">{product.categoryName}</p>
         <h3 className="text-lg font-serif font-semibold text-[#1A1A1A] group-hover:underline underline-offset-4 text-center">
           {product.name}
         </h3>

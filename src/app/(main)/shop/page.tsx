@@ -4,19 +4,19 @@ import { useState } from "react";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 import { categories } from "@/lib/mock-data";
+import { ProductListSkeleton } from "@/components/shop/ProductListSkeleton";
 
 export default function ShopPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const { data: products = [], isLoading } = useProducts();
+  const { data: response, isLoading } = useProducts();
+  const products = response?.data ?? [];
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
+    const matchesCategory = selectedCategory === "All" || product.categoryName === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  if (isLoading) return <div>Loading...</div>;
 
   return (
     <main className="bg-[#FDFBF7] min-h-screen py-24">
@@ -53,11 +53,15 @@ export default function ShopPage() {
         </div>
 
         {/* Product Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
+        {isLoading ? (
+          <ProductListSkeleton />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            {filteredProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
