@@ -5,7 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import bcrypt from 'bcryptjs'
 
-export async function login(_prevState: { error: string }, formData: FormData) {
+export async function login(_prevState: { error?: string }, formData: FormData) {
   const supabase = await createClient()
 
   const email = formData.get('email') as string
@@ -30,7 +30,7 @@ export async function login(_prevState: { error: string }, formData: FormData) {
 
   // 3. Đăng nhập thành công
   revalidatePath('/', 'layout')
-  redirect('/')
+  return { success: true };
 }
 
 export async function register(_prevState: { error?: string }, formData: FormData) {
