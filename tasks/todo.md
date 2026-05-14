@@ -1,10 +1,8 @@
 # Tasks Todo
 
-- [x] Setup API Environment Configuration - Priority: high - Status: completed
-- [x] Setup API Gateway Client (Supabase + Axios) - Priority: high - Status: completed
-- [x] Initialize Prisma - Priority: high - Status: completed
-- [x] Define Database Schema (User, Product, Order) - Priority: high - Status: completed
-- [x] Implement JWT Authentication Flow (Supabase Auth) - Priority: high - Status: completed
-- [x] Refactor Hooks to use Real API - Priority: high - Status: completed
-- [x] Implement Route Protection (Auth Guard) - Priority: medium - Status: completed
-- [x] Implement Global API Error Handling - Priority: medium - Status: completed
+- [x] Create Category API routes (GET/POST/PUT/DELETE) with delete guard - Priority: high - Status: completed
+- [x] Add Admin Categories page and sidebar navigation - Priority: high - Status: completed
+- [x] Refactor Product Management to use category select by `categoryId` - Priority: high - Status: completed
+- [x] Replace upload alerts with luxury toast UX - Priority: medium - Status: completed
+- [ ] Add migration flow when deleting category with products (reassign category) - Priority: medium - Status: pending
+- [ ] Add category filters in product table - Priority: low - Status: pending

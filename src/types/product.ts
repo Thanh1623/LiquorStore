@@ -15,7 +15,7 @@ export interface CreateProductInput {
   description: string;
   imageUrl: string;
   stockQuantity: number;
-  categoryName: string;
+  categoryId: string;
 }
 
 export interface UpdateProductInput {
@@ -25,5 +25,5 @@ export interface UpdateProductInput {
   description?: string;
   imageUrl?: string;
   stockQuantity?: number;
-  categoryName?: string;
+  categoryId?: string;
 }

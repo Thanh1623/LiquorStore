@@ -12,12 +12,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { compressImage } from '@/lib/utils/image';
 import { deleteProductImage, uploadProductImage } from '@/lib/api/storage';
 import { useCreateProduct, useDeleteProduct, useProducts, useUpdateProduct } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
 import { Product } from '@/types/product';
 
 type ProductForm = {
   name: string;
   price: string;
-  categoryName: string;
+  categoryId: string;
   description: string;
   stockQuantity: string;
   imageFile: File | null;
@@ -115,7 +116,7 @@ function LuxuryToast({ toast }: { toast: ToastState }) {
 const emptyForm: ProductForm = {
   name: '',
   price: '',
-  categoryName: '',
+  categoryId: '',
   description: '',
   stockQuantity: '0',
   imageFile: null,
@@ -123,6 +124,7 @@ const emptyForm: ProductForm = {
 
 export default function ProductManagement() {
   const { data: response, isLoading } = useProducts();
+  const { data: categoriesResponse } = useCategories();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
@@ -200,8 +202,8 @@ export default function ProductManagement() {
       errors.name = 'Name should be at least 2 characters';
     }
 
-    if (!form.categoryName.trim()) {
-      errors.categoryName = 'Category is required';
+    if (!form.categoryId.trim()) {
+      errors.categoryId = 'Category is required';
     }
 
     if (!form.price.trim()) {
@@ -265,7 +267,7 @@ export default function ProductManagement() {
       await createProduct.mutateAsync({
         name: newProduct.name.trim(),
         price: Number(newProduct.price),
-        categoryName: newProduct.categoryName.trim(),
+        categoryId: newProduct.categoryId,
         description: newProduct.description.trim(),
         imageUrl,
         stockQuantity: Number(newProduct.stockQuantity || 0),
@@ -285,7 +287,7 @@ export default function ProductManagement() {
     setEditForm({
       name: product.name,
       price: String(product.price),
-      categoryName: product.categoryName,
+      categoryId: product.categoryId,
       description: product.description,
       stockQuantity: String(product.stockQuantity),
       imageFile: null,
@@ -316,7 +318,7 @@ export default function ProductManagement() {
         id: editingProduct.id,
         name: editForm.name.trim(),
         price: Number(editForm.price),
-        categoryName: editForm.categoryName.trim(),
+        categoryId: editForm.categoryId,
         description: editForm.description.trim(),
         stockQuantity: Number(editForm.stockQuantity || 0),
         imageUrl: newImageUrl,
@@ -349,6 +351,8 @@ export default function ProductManagement() {
       showToast('Delete failed', error instanceof Error ? error.message : 'Delete product failed', 'error');
     }
   };
+
+  const categories = categoriesResponse?.data ?? [];
 
   return (
     <div className="flex min-h-screen bg-[radial-gradient(circle_at_top,#fef7e7_0%,#f5efe2_35%,#ece5d7_100%)] font-sans">
@@ -388,8 +392,17 @@ export default function ProductManagement() {
                   <Input type="number" min="0" value={newProduct.price} onChange={(e) => { setNewProduct({ ...newProduct, price: e.target.value }); setNewProductErrors({ ...newProductErrors, price: undefined }); }} />
                   {newProductErrors.price ? <p className="text-xs text-rose-600">{newProductErrors.price}</p> : null}
                   <Label>Category</Label>
-                  <Input value={newProduct.categoryName} onChange={(e) => { setNewProduct({ ...newProduct, categoryName: e.target.value }); setNewProductErrors({ ...newProductErrors, categoryName: undefined }); }} />
-                  {newProductErrors.categoryName ? <p className="text-xs text-rose-600">{newProductErrors.categoryName}</p> : null}
+                  <select
+                    value={newProduct.categoryId}
+                    onChange={(e) => { setNewProduct({ ...newProduct, categoryId: e.target.value }); setNewProductErrors({ ...newProductErrors, categoryId: undefined }); }}
+                    className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm"
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>{category.name}</option>
+                    ))}
+                  </select>
+                  {newProductErrors.categoryId ? <p className="text-xs text-rose-600">{newProductErrors.categoryId}</p> : null}
                   <Label>Stock Quantity</Label>
                   <Input type="number" min="0" value={newProduct.stockQuantity} onChange={(e) => { setNewProduct({ ...newProduct, stockQuantity: e.target.value }); setNewProductErrors({ ...newProductErrors, stockQuantity: undefined }); }} />
                   {newProductErrors.stockQuantity ? <p className="text-xs text-rose-600">{newProductErrors.stockQuantity}</p> : null}
@@ -493,8 +506,17 @@ export default function ProductManagement() {
               <Input type="number" min="0" value={editForm.price} onChange={(e) => { setEditForm({ ...editForm, price: e.target.value }); setEditFormErrors({ ...editFormErrors, price: undefined }); }} />
               {editFormErrors.price ? <p className="text-xs text-rose-600">{editFormErrors.price}</p> : null}
               <Label>Category</Label>
-              <Input value={editForm.categoryName} onChange={(e) => { setEditForm({ ...editForm, categoryName: e.target.value }); setEditFormErrors({ ...editFormErrors, categoryName: undefined }); }} />
-              {editFormErrors.categoryName ? <p className="text-xs text-rose-600">{editFormErrors.categoryName}</p> : null}
+              <select
+                value={editForm.categoryId}
+                onChange={(e) => { setEditForm({ ...editForm, categoryId: e.target.value }); setEditFormErrors({ ...editFormErrors, categoryId: undefined }); }}
+                className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm"
+              >
+                <option value="">Select category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>{category.name}</option>
+                ))}
+              </select>
+              {editFormErrors.categoryId ? <p className="text-xs text-rose-600">{editFormErrors.categoryId}</p> : null}
               <Label>Stock Quantity</Label>
               <Input type="number" min="0" value={editForm.stockQuantity} onChange={(e) => { setEditForm({ ...editForm, stockQuantity: e.target.value }); setEditFormErrors({ ...editFormErrors, stockQuantity: undefined }); }} />
               {editFormErrors.stockQuantity ? <p className="text-xs text-rose-600">{editFormErrors.stockQuantity}</p> : null}

@@ -22,34 +22,24 @@ const toProductDto = (row: ProductRow, category: string) => ({
   categoryName: category,
 });
 
-async function resolveCategoryId(categoryName: string) {
+async function resolveCategoryName(categoryId: string) {
   const supabase = await createClient();
 
   const { data: existingCategory, error: existingCategoryError } = await supabase
     .from('Category')
     .select('id,name')
-    .eq('name', categoryName)
+    .eq('id', categoryId)
     .maybeSingle();
 
   if (existingCategoryError) {
     return { categoryId: null, error: existingCategoryError.message };
   }
 
-  if (existingCategory?.id) {
-    return { categoryId: existingCategory.id, error: null };
+  if (!existingCategory?.id) {
+    return { categoryName: null, error: 'Category not found' };
   }
 
-  const { data: createdCategory, error: createdCategoryError } = await supabase
-    .from('Category')
-    .insert({ name: categoryName })
-    .select('id,name')
-    .single();
-
-  if (createdCategoryError || !createdCategory) {
-    return { categoryId: null, error: createdCategoryError?.message ?? 'Failed to create category' };
-  }
-
-  return { categoryId: createdCategory.id, error: null };
+  return { categoryName: existingCategory.name, error: null };
 }
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -120,15 +110,15 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     updates.stockQuantity = stockQuantity;
   }
 
-  if (body.categoryName !== undefined) {
-    const categoryName = String(body.categoryName).trim();
-    if (!categoryName) {
+  if (body.categoryId !== undefined) {
+    const categoryId = String(body.categoryId).trim();
+    if (!categoryId) {
       return NextResponse.json({ error: 'Category is required' }, { status: 400 });
     }
 
-    const { categoryId, error } = await resolveCategoryId(categoryName);
-    if (error || !categoryId) {
-      return NextResponse.json({ error: error ?? 'Failed to resolve category' }, { status: 500 });
+    const { categoryName, error } = await resolveCategoryName(categoryId);
+    if (error || !categoryName) {
+      return NextResponse.json({ error: error ?? 'Failed to resolve category' }, { status: 400 });
     }
     updates.categoryId = categoryId;
   }

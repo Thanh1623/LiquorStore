@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, Tags } from 'lucide-react';
 
 export function Sidebar() {
   return (
@@ -12,6 +12,7 @@ export function Sidebar() {
         {[
           { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
           { icon: Package, label: 'Products', href: '/admin/products' },
+          { icon: Tags, label: 'Categories', href: '/admin/categories' },
           { icon: ShoppingBag, label: 'Orders', href: '/admin/orders' },
           { icon: Settings, label: 'Settings', href: '/admin/settings' },
         ].map((item) => (

@@ -64,39 +64,28 @@ export async function POST(request: Request) {
   const body = await request.json();
 
   const name = String(body?.name ?? '').trim();
-  const categoryName = String(body?.categoryName ?? '').trim();
+  const categoryId = String(body?.categoryId ?? '').trim();
   const price = Number(body?.price ?? 0);
   const description = String(body?.description ?? '').trim();
   const imageUrl = String(body?.imageUrl ?? '').trim();
   const stockQuantity = Number(body?.stockQuantity ?? 0);
 
-  if (!name || !categoryName || Number.isNaN(price) || price < 0 || Number.isNaN(stockQuantity) || stockQuantity < 0) {
+  if (!name || !categoryId || Number.isNaN(price) || price < 0 || Number.isNaN(stockQuantity) || stockQuantity < 0) {
     return NextResponse.json({ error: 'Invalid product payload' }, { status: 400 });
   }
 
-  let categoryId = '';
-  const { data: existingCategory } = await supabase
+  const { data: existingCategory, error: existingCategoryError } = await supabase
     .from('Category')
     .select('id,name')
-    .eq('name', categoryName)
+    .eq('id', categoryId)
     .maybeSingle();
 
-  if (existingCategory?.id) {
-    categoryId = existingCategory.id;
-  } else {
-    const { data: createdCategory, error: createCategoryError } = await supabase
-      .from('Category')
-      .insert({ name: categoryName })
-      .select('id,name')
-      .single();
+  if (existingCategoryError) {
+    return NextResponse.json({ error: existingCategoryError.message }, { status: 500 });
+  }
 
-    if (createCategoryError || !createdCategory) {
-      return NextResponse.json(
-        { error: createCategoryError?.message ?? 'Failed to create category' },
-        { status: 500 }
-      );
-    }
-    categoryId = createdCategory.id;
+  if (!existingCategory) {
+    return NextResponse.json({ error: 'Category not found' }, { status: 400 });
   }
 
   const { data: createdProduct, error: createProductError } = await supabase
@@ -119,5 +108,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ data: toProductDto(createdProduct as ProductRow, categoryName) }, { status: 201 });
+  return NextResponse.json({ data: toProductDto(createdProduct as ProductRow, existingCategory.name) }, { status: 201 });
 }
