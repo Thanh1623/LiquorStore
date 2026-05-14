@@ -5,3 +5,6 @@
 - [x] Dashboard API: summary KPIs + revenue series (6 months) - Priority: high - Status: completed
 - [x] Dashboard UI: replace mock cards/chart with real API - Priority: high - Status: completed
 - [x] Add reusable admin loading/error states for orders/dashboard - Priority: medium - Status: completed
+- [x] Add `imageUrl` to Category model - Priority: high - Status: completed
+- [x] Implement Category image management in Admin UI - Priority: high - Status: completed
+- [x] Update Home UI to fetch and display Category images - Priority: high - Status: completed
