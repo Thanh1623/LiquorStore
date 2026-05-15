@@ -28,6 +28,26 @@ const toProductDto = (row: ProductRow, category: string) => ({
   oldPrice: row.oldPrice ? Number(row.oldPrice) : null,
 });
 
+async function resolveCategoryName(categoryId: string) {
+  const supabase = await createClient();
+
+  const { data: existingCategory, error: existingCategoryError } = await supabase
+    .from('Category')
+    .select('id,name')
+    .eq('id', categoryId)
+    .maybeSingle();
+
+  if (existingCategoryError) {
+    return { categoryId: null, error: existingCategoryError.message };
+  }
+
+  if (!existingCategory?.id) {
+    return { categoryName: null, error: 'Category not found' };
+  }
+
+  return { categoryName: existingCategory.name, error: null };
+}
+
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createClient();
