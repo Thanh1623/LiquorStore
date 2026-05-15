@@ -2,7 +2,9 @@ export type OrderStatus = 'pending' | 'completed' | 'cancelled';
 
 export interface OrderListItem {
   id: string;
-  customerEmail: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
   totalAmount: number;
   status: OrderStatus;
   createdAt: string;
@@ -18,7 +20,9 @@ export interface OrderItemDetail {
 
 export interface OrderDetail {
   id: string;
-  customerEmail: string;
+  customerName: string;
+  customerPhone: string;
+  customerAddress: string;
   totalAmount: number;
   status: OrderStatus;
   createdAt: string;

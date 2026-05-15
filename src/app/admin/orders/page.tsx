@@ -1,13 +1,13 @@
 "use client";
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { Sidebar } from '@/components/admin/Sidebar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useOrderDetail, useOrders, useUpdateOrderStatus } from '@/hooks/useOrders';
+import { useOrderDetail, useOrders, useUpdateOrderStatus, useDeleteOrder } from '@/hooks/useOrders';
 import { OrderStatus } from '@/types/order';
 import { AdminErrorState, AdminLoadingState } from '@/components/admin/AdminDataState';
 
@@ -22,7 +22,17 @@ export default function OrderManagement() {
   const [pageSize] = useState(10);
   const [status, setStatus] = useState('all');
   const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState('');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(search);
+      setPage(1);
+    }, 500);
+
+    return () => clearTimeout(handler);
+  }, [search]);
 
   const {
     data: ordersResponse,
@@ -30,7 +40,7 @@ export default function OrderManagement() {
     isError,
     error,
     refetch,
-  } = useOrders({ page, pageSize, status, search });
+  } = useOrders({ page, pageSize, status, search: debouncedSearch });
   const {
     data: detailResponse,
     isLoading: isDetailLoading,
@@ -39,6 +49,7 @@ export default function OrderManagement() {
     refetch: refetchDetail,
   } = useOrderDetail(selectedOrderId);
   const updateStatus = useUpdateOrderStatus();
+  const deleteOrder = useDeleteOrder();
 
   const orderData = ordersResponse?.data;
   const items = orderData?.items ?? [];
@@ -53,6 +64,12 @@ export default function OrderManagement() {
 
   const handleStatusUpdate = async (id: string, nextStatus: OrderStatus) => {
     await updateStatus.mutateAsync({ id, status: nextStatus });
+  };
+
+  const handleDeleteOrder = async (id: string) => {
+    if (confirm('Are you sure you want to delete this order?')) {
+      await deleteOrder.mutateAsync(id);
+    }
   };
 
   return (
@@ -70,7 +87,7 @@ export default function OrderManagement() {
             <div className="flex items-center gap-2">
               <Input
                 value={search}
-                onChange={(e) => { setSearch(e.target.value); setPage(1); }}
+                onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by order/customer"
                 className="w-60"
               />
@@ -115,27 +132,28 @@ export default function OrderManagement() {
                     {items.map((order) => (
                       <TableRow key={order.id}>
                         <TableCell className="font-medium">{order.id.slice(0, 8)}</TableCell>
-                        <TableCell>{order.customerEmail}</TableCell>
+                        <TableCell>
+                          <div className="font-medium">{order.customerName}</div>
+                          <div className="text-xs text-slate-500">{order.customerPhone}</div>
+                          <div className="text-xs text-slate-400">{order.customerAddress}</div>
+                        </TableCell>
                         <TableCell>${order.totalAmount.toFixed(2)}</TableCell>
                         <TableCell>{order.itemCount}</TableCell>
                         <TableCell>
-                          <span className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-semibold ${statusStyle[order.status]}`}>
-                            {order.status}
-                          </span>
+                          <select
+                            value={order.status}
+                            onChange={(e) => handleStatusUpdate(order.id, e.target.value as OrderStatus)}
+                            className={`px-3 py-1 rounded-full text-[10px] uppercase tracking-widest font-semibold ${statusStyle[order.status]}`}
+                          >
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                          </select>
                         </TableCell>
                         <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="sm" onClick={() => setSelectedOrderId(order.id)}>Detail</Button>
-                          {order.status === 'pending' ? (
-                            <>
-                              <Button variant="ghost" size="sm" onClick={() => handleStatusUpdate(order.id, 'completed')}>
-                                Complete
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-rose-600" onClick={() => handleStatusUpdate(order.id, 'cancelled')}>
-                                Cancel
-                              </Button>
-                            </>
-                          ) : null}
+                          <Button variant="ghost" size="sm" className="text-rose-600" onClick={() => handleDeleteOrder(order.id)}>Delete</Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -173,7 +191,9 @@ export default function OrderManagement() {
               <div className="space-y-4">
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <p><span className="font-semibold">Order:</span> {detailResponse.data.id}</p>
-                  <p><span className="font-semibold">Customer:</span> {detailResponse.data.customerEmail}</p>
+                  <p><span className="font-semibold">Name:</span> {detailResponse.data.customerName}</p>
+                  <p><span className="font-semibold">Phone:</span> {detailResponse.data.customerPhone}</p>
+                  <p><span className="font-semibold">Address:</span> {detailResponse.data.customerAddress}</p>
                   <p><span className="font-semibold">Status:</span> {detailResponse.data.status}</p>
                   <p><span className="font-semibold">Total:</span> ${detailResponse.data.totalAmount.toFixed(2)}</p>
                 </div>

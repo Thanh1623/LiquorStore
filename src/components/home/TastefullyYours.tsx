@@ -9,6 +9,7 @@ import { getProducts } from "@/lib/api/products";
 import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function TastefullyYours() {
   const router = useRouter();
@@ -35,7 +36,21 @@ export function TastefullyYours() {
   if (isLoading) {
     return (
       <section className="py-16 bg-white">
-        <div className="container mx-auto px-4 text-center">Loading products...</div>
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <Skeleton className="w-48 h-6 mx-auto mb-2" />
+            <Skeleton className="w-72 h-10 mx-auto" />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="space-y-4">
+                <Skeleton className="w-full aspect-[3/4]" />
+                <Skeleton className="w-32 h-6 mx-auto" />
+                <Skeleton className="w-48 h-8 mx-auto" />
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
     );
   }

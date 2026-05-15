@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createOrder, getOrderById, getOrders, updateOrderStatus } from '@/lib/api/orders';
+import { createOrder, deleteOrder, getOrderById, getOrders, updateOrderStatus } from '@/lib/api/orders';
 import { OrderStatus } from '@/types/order';
 
 export const useOrders = (params: { page: number; pageSize: number; status?: string; search?: string }) => {
@@ -24,6 +24,18 @@ export const useUpdateOrderStatus = () => {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
       queryClient.invalidateQueries({ queryKey: ['order-detail', variables.id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard-revenue'] });
+    },
+  });
+};
+
+export const useDeleteOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteOrder(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['orders'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-revenue'] });
     },

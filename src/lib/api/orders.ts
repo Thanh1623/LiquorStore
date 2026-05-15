@@ -38,3 +38,8 @@ export const updateOrderStatus = async (id: string, status: OrderStatus) => {
   const response = await api.patch<ApiResponse<{ id: string; status: OrderStatus }>>(`/orders/${id}`, { status });
   return response.data;
 };
+
+export const deleteOrder = async (id: string) => {
+  const response = await api.delete<ApiResponse<{ success: boolean }>>(`/orders/${id}`);
+  return response.data;
+};

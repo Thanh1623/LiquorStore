@@ -8,7 +8,9 @@ type OrderRow = {
   status: 'pending' | 'completed' | 'cancelled';
   createdAt: string;
   userId: string;
-  User?: { email: string } | null;
+  customerName: string;
+  customerPhone: string;
+  shippingAddress: string;
   OrderItem?: { id: string }[];
 };
 
@@ -23,7 +25,7 @@ export async function GET(request: Request) {
 
   let query = supabase
     .from('Order')
-    .select('id,totalAmount,status,createdAt,userId,User(email),OrderItem(id)', { count: 'exact' })
+    .select('id,totalAmount,status,createdAt,userId,customerName,customerPhone,shippingAddress,OrderItem(id)', { count: 'exact' })
     .order('createdAt', { ascending: false });
 
   if (status) {
@@ -40,7 +42,9 @@ export async function GET(request: Request) {
 
   let items = (data as OrderRow[]).map((row): OrderListItem => ({
     id: row.id,
-    customerEmail: row.User?.email ?? 'Unknown',
+    customerName: row.customerName || 'Unknown',
+    customerPhone: row.customerPhone || 'N/A',
+    customerAddress: row.shippingAddress || 'N/A',
     totalAmount: Number(row.totalAmount ?? 0),
     status: row.status,
     createdAt: row.createdAt,
@@ -49,7 +53,7 @@ export async function GET(request: Request) {
 
   if (search) {
     items = items.filter((item) =>
-      item.id.toLowerCase().includes(search) || item.customerEmail.toLowerCase().includes(search)
+      item.id.toLowerCase().includes(search) || item.customerName.toLowerCase().includes(search) || item.customerAddress.toLowerCase().includes(search)
     );
   }
 
