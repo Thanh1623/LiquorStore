@@ -9,6 +9,9 @@ type ProductRow = {
   imageUrl: string | null;
   stockQuantity: number | null;
   categoryId: string;
+  isFeatured: boolean;
+  badge: string | null;
+  oldPrice: number | string | null;
 };
 
 type CategoryRow = {
@@ -25,6 +28,9 @@ const toProductDto = (row: ProductRow, categoryName?: string) => ({
   stockQuantity: Number(row.stockQuantity ?? 0),
   categoryId: row.categoryId,
   categoryName: categoryName ?? '',
+  isFeatured: row.isFeatured,
+  badge: row.badge,
+  oldPrice: row.oldPrice ? Number(row.oldPrice) : null,
 });
 
 export async function GET() {
@@ -32,7 +38,7 @@ export async function GET() {
 
   const { data: products, error: productsError } = await supabase
     .from('Product')
-    .select('id,name,price,description,imageUrl,stockQuantity,categoryId')
+    .select('id,name,price,description,imageUrl,stockQuantity,categoryId,isFeatured,badge,oldPrice')
     .order('name', { ascending: true });
 
   if (productsError) {
@@ -69,6 +75,9 @@ export async function POST(request: Request) {
   const description = String(body?.description ?? '').trim();
   const imageUrl = String(body?.imageUrl ?? '').trim();
   const stockQuantity = Number(body?.stockQuantity ?? 0);
+  const isFeatured = Boolean(body?.isFeatured ?? false);
+  const badge = body?.badge ? String(body.badge).trim() : null;
+  const oldPrice = body?.oldPrice ? Number(body.oldPrice) : null;
 
   if (!name || !categoryId || Number.isNaN(price) || price < 0 || Number.isNaN(stockQuantity) || stockQuantity < 0) {
     return NextResponse.json({ error: 'Invalid product payload' }, { status: 400 });
@@ -97,8 +106,11 @@ export async function POST(request: Request) {
       imageUrl: imageUrl || null,
       stockQuantity,
       categoryId,
+      isFeatured,
+      badge,
+      oldPrice,
     })
-    .select('id,name,price,description,imageUrl,stockQuantity,categoryId')
+    .select('id,name,price,description,imageUrl,stockQuantity,categoryId,isFeatured,badge,oldPrice')
     .single();
 
   if (createProductError || !createdProduct) {

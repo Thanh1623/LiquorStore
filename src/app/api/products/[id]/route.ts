@@ -9,6 +9,9 @@ type ProductRow = {
   imageUrl: string | null;
   stockQuantity: number | null;
   categoryId: string;
+  isFeatured: boolean;
+  badge: string | null;
+  oldPrice: number | string | null;
 };
 
 const toProductDto = (row: ProductRow, category: string) => ({
@@ -20,27 +23,10 @@ const toProductDto = (row: ProductRow, category: string) => ({
   stockQuantity: Number(row.stockQuantity ?? 0),
   categoryId: row.categoryId,
   categoryName: category,
+  isFeatured: row.isFeatured,
+  badge: row.badge,
+  oldPrice: row.oldPrice ? Number(row.oldPrice) : null,
 });
-
-async function resolveCategoryName(categoryId: string) {
-  const supabase = await createClient();
-
-  const { data: existingCategory, error: existingCategoryError } = await supabase
-    .from('Category')
-    .select('id,name')
-    .eq('id', categoryId)
-    .maybeSingle();
-
-  if (existingCategoryError) {
-    return { categoryId: null, error: existingCategoryError.message };
-  }
-
-  if (!existingCategory?.id) {
-    return { categoryName: null, error: 'Category not found' };
-  }
-
-  return { categoryName: existingCategory.name, error: null };
-}
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -48,7 +34,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const { data: product, error: productError } = await supabase
     .from('Product')
-    .select('id,name,price,description,imageUrl,stockQuantity,categoryId')
+    .select('id,name,price,description,imageUrl,stockQuantity,categoryId,isFeatured,badge,oldPrice')
     .eq('id', id)
     .maybeSingle();
 
@@ -122,6 +108,18 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     }
     updates.categoryId = categoryId;
   }
+  
+  if (body.isFeatured !== undefined) {
+    updates.isFeatured = Boolean(body.isFeatured);
+  }
+  
+  if (body.badge !== undefined) {
+    updates.badge = body.badge ? String(body.badge).trim() : null;
+  }
+  
+  if (body.oldPrice !== undefined) {
+    updates.oldPrice = body.oldPrice ? Number(body.oldPrice) : null;
+  }
 
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No updates provided' }, { status: 400 });
@@ -131,7 +129,7 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
     .from('Product')
     .update(updates)
     .eq('id', id)
-    .select('id,name,price,description,imageUrl,stockQuantity,categoryId')
+    .select('id,name,price,description,imageUrl,stockQuantity,categoryId,isFeatured,badge,oldPrice')
     .maybeSingle();
 
   if (updateError) {

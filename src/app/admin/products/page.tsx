@@ -22,6 +22,9 @@ type ProductForm = {
   description: string;
   stockQuantity: string;
   imageFile: File | null;
+  isFeatured: boolean;
+  badge: string;
+  oldPrice: string;
 };
 
 type ProductFormErrors = Partial<Record<keyof ProductForm, string>>;
@@ -120,6 +123,9 @@ const emptyForm: ProductForm = {
   description: '',
   stockQuantity: '0',
   imageFile: null,
+  isFeatured: false,
+  badge: '',
+  oldPrice: '',
 };
 
 export default function ProductManagement() {
@@ -225,8 +231,8 @@ export default function ProductManagement() {
       errors.stockQuantity = 'Stock must be a non-negative integer';
     }
 
-    if (form.description.trim().length > 500) {
-      errors.description = 'Description must be under 500 characters';
+    if (form.oldPrice && (Number.isNaN(Number(form.oldPrice)) || Number(form.oldPrice) < 0)) {
+      errors.oldPrice = 'Old price must be a valid non-negative number';
     }
 
     if (mode === 'create' && !form.imageFile) {
@@ -278,6 +284,9 @@ export default function ProductManagement() {
         description: newProduct.description.trim(),
         imageUrl,
         stockQuantity: Number(newProduct.stockQuantity || 0),
+        isFeatured: newProduct.isFeatured,
+        badge: newProduct.badge || null,
+        oldPrice: newProduct.oldPrice ? Number(newProduct.oldPrice) : null,
       });
       resetAddForm();
       setIsAddDialogOpen(false);
@@ -298,6 +307,9 @@ export default function ProductManagement() {
       description: product.description,
       stockQuantity: String(product.stockQuantity),
       imageFile: null,
+      isFeatured: product.isFeatured,
+      badge: product.badge ?? '',
+      oldPrice: product.oldPrice ? String(product.oldPrice) : '',
     });
     setEditImagePreview(product.imageUrl);
     setEditImageName('Keep current image');
@@ -329,6 +341,9 @@ export default function ProductManagement() {
         description: editForm.description.trim(),
         stockQuantity: Number(editForm.stockQuantity || 0),
         imageUrl: newImageUrl,
+        isFeatured: editForm.isFeatured,
+        badge: editForm.badge || null,
+        oldPrice: editForm.oldPrice ? Number(editForm.oldPrice) : null,
       });
 
       if (editForm.imageFile && editingProduct.imageUrl) {
@@ -430,6 +445,24 @@ export default function ProductManagement() {
                     {newProductErrors.description ? <p className="text-xs text-rose-600">{newProductErrors.description}</p> : <span />}
                     <p className="text-[11px] text-amber-700">{newProduct.description.length}/500</p>
                   </div>
+                  <div className="flex items-center gap-2">
+                    <input type="checkbox" checked={newProduct.isFeatured} onChange={(e) => setNewProduct({ ...newProduct, isFeatured: e.target.checked })} />
+                    <Label>Is Featured</Label>
+                  </div>
+                  <Label>Badge</Label>
+                  <select
+                    value={newProduct.badge}
+                    onChange={(e) => setNewProduct({ ...newProduct, badge: e.target.value })}
+                    className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm"
+                  >
+                    <option value="">None</option>
+                    <option value="Sale">Sale</option>
+                    <option value="Best Seller">Best Seller</option>
+                    <option value="New Arrival">New Arrival</option>
+                  </select>
+                  <Label>Old Price</Label>
+                  <Input type="number" min="0" value={newProduct.oldPrice} onChange={(e) => { setNewProduct({ ...newProduct, oldPrice: e.target.value }); setNewProductErrors({ ...newProductErrors, oldPrice: undefined }); }} />
+                  {newProductErrors.oldPrice ? <p className="text-xs text-rose-600">{newProductErrors.oldPrice}</p> : null}
                   <Label>Image</Label>
                     <label className="flex cursor-pointer items-center justify-between rounded-xl border border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-2 transition hover:border-amber-400">
                       <span className="inline-flex items-center rounded-md bg-amber-900 px-3 py-1 text-xs font-semibold text-amber-50">Upload Image</span>
@@ -545,6 +578,24 @@ export default function ProductManagement() {
                 {editFormErrors.description ? <p className="text-xs text-rose-600">{editFormErrors.description}</p> : <span />}
                 <p className="text-[11px] text-amber-700">{editForm.description.length}/500</p>
               </div>
+              <div className="flex items-center gap-2">
+                <input type="checkbox" checked={editForm.isFeatured} onChange={(e) => setEditForm({ ...editForm, isFeatured: e.target.checked })} />
+                <Label>Is Featured</Label>
+              </div>
+              <Label>Badge</Label>
+              <select
+                value={editForm.badge}
+                onChange={(e) => setEditForm({ ...editForm, badge: e.target.value })}
+                className="h-10 rounded-md border border-amber-300 bg-white px-3 text-sm"
+              >
+                <option value="">None</option>
+                <option value="Sale">Sale</option>
+                <option value="Best Seller">Best Seller</option>
+                <option value="New Arrival">New Arrival</option>
+              </select>
+              <Label>Old Price</Label>
+              <Input type="number" min="0" value={editForm.oldPrice} onChange={(e) => { setEditForm({ ...editForm, oldPrice: e.target.value }); setEditFormErrors({ ...editFormErrors, oldPrice: undefined }); }} />
+              {editFormErrors.oldPrice ? <p className="text-xs text-rose-600">{editFormErrors.oldPrice}</p> : null}
               <Label>Replace Image</Label>
                     <label className="flex cursor-pointer items-center justify-between rounded-xl border border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 px-3 py-2 transition hover:border-amber-400">
                       <span className="inline-flex items-center rounded-md bg-amber-900 px-3 py-1 text-xs font-semibold text-amber-50">Upload Image</span>

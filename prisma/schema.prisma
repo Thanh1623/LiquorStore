@@ -30,6 +30,9 @@ model Product {
   imageUrl      String?
   stockQuantity Int
   categoryId    String
+  isFeatured    Boolean     @default(false)
+  badge         String?
+  oldPrice      Decimal?
   orderItems    OrderItem[]
   category      Category    @relation(fields: [categoryId], references: [id])
 }

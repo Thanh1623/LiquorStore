@@ -7,6 +7,9 @@ export interface Product {
   stockQuantity: number;
   categoryId: string;
   categoryName: string;
+  isFeatured: boolean;
+  badge?: string | null;
+  oldPrice?: number | null;
 }
 
 export interface CreateProductInput {
@@ -16,6 +19,9 @@ export interface CreateProductInput {
   imageUrl: string;
   stockQuantity: number;
   categoryId: string;
+  isFeatured?: boolean;
+  badge?: string | null;
+  oldPrice?: number | null;
 }
 
 export interface UpdateProductInput {
@@ -26,4 +32,7 @@ export interface UpdateProductInput {
   imageUrl?: string;
   stockQuantity?: number;
   categoryId?: string;
+  isFeatured?: boolean;
+  badge?: string | null;
+  oldPrice?: number | null;
 }

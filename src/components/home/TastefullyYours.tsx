@@ -4,43 +4,30 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, Heart, Eye, ArrowRight } from "lucide-react";
-
-const products = [
-  {
-    id: 1,
-    name: "Bacardi 151",
-    category: "Brandy",
-    image: "https://images.unsplash.com/photo-1549725510-1c6085a21008?auto=format&fit=crop&w=400&h=500&q=80",
-    price: 49.00,
-    oldPrice: 69.00,
-    badge: "Sale"
-  },
-  {
-    id: 2,
-    name: "Jim Beam Kentucky Straight",
-    category: "Gin",
-    image: "https://images.unsplash.com/photo-1598214886806-c87b84b7078b?auto=format&fit=crop&w=400&h=500&q=80",
-    price: 69.00,
-    badge: "Best Seller"
-  },
-  {
-    id: 3,
-    name: "Citadelle",
-    category: "Rum",
-    image: "https://images.unsplash.com/photo-1614362545857-3bc16c4c7d1b?auto=format&fit=crop&w=400&h=500&q=80",
-    price: 69.00,
-    badge: "New Arrival"
-  },
-  {
-    id: 4,
-    name: "The Glenlivet",
-    category: "Rum",
-    image: "https://images.unsplash.com/photo-1527281400688-1961e5f171d2?auto=format&fit=crop&w=400&h=500&q=80",
-    price: 69.00,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { getProducts } from "@/lib/api/products";
 
 export function TastefullyYours() {
+  const { data: response, isLoading } = useQuery({
+    queryKey: ["products"],
+    queryFn: getProducts,
+  });
+
+  const allProducts = response?.data ?? [];
+  const products = allProducts.filter((p) => p.isFeatured).slice(0, 4);
+
+  if (isLoading) {
+    return (
+      <section className="py-16 bg-white">
+        <div className="container mx-auto px-4 text-center">Loading products...</div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
@@ -55,7 +42,7 @@ export function TastefullyYours() {
               {/* Product Image Container */}
               <div className="relative aspect-[3/4] overflow-hidden bg-gray-100 mb-6">
                 <Image
-                  src={product.image}
+                  src={product.imageUrl}
                   alt={product.name}
                   fill
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -83,7 +70,7 @@ export function TastefullyYours() {
 
               {/* Product Info */}
               <div className="text-center space-y-2">
-                <p className="text-[#AB4227] italic font-serif text-sm">{product.category}</p>
+                <p className="text-[#AB4227] italic font-serif text-sm">{product.categoryName}</p>
                 <h3 className="text-lg font-serif font-bold text-[#212529]">{product.name}</h3>
                 <div className="flex justify-center gap-2 text-sm font-medium">
                   {product.oldPrice && (
