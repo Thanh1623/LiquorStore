@@ -1,13 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Heart, Eye } from "lucide-react";
+import { ShoppingBag, Eye } from "lucide-react";
 import { Product } from "@/types/product";
+import { useCartStore } from "@/store/cartStore";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ProductCardProps {
   product: Product;
 }
 
 export function ProductCard({ product }: ProductCardProps) {
+  const { addItem } = useCartStore();
+  const router = useRouter();
+
   return (
     <div className="group block">
       {/* Container with subtle border */}
@@ -22,17 +28,25 @@ export function ProductCard({ product }: ProductCardProps) {
         </Link>
         
         {/* Badge Placeholder */}
-        <div className="absolute bottom-2 left-2 bg-[#AB4227] text-white text-[10px] px-2 py-1 uppercase tracking-wider">Sale</div>
+        {product.badge && (
+          <div className="absolute bottom-2 left-2 bg-[#AB4227] text-white text-[10px] px-2 py-1 uppercase tracking-wider">{product.badge}</div>
+        )}
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2">
-          <button className="bg-white p-2 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors">
+          <button 
+            onClick={() => {
+              addItem(product);
+              toast.success(`${product.name} added to cart!`);
+            }}
+            className="bg-white p-2 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors"
+          >
             <ShoppingBag size={18} />
           </button>
-          <button className="bg-white p-2 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors">
-            <Heart size={18} />
-          </button>
-          <button className="bg-white p-2 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors">
+          <button 
+            onClick={() => router.push(`/shop/${product.id}`)}
+            className="bg-white p-2 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors"
+          >
             <Eye size={18} />
           </button>
         </div>
