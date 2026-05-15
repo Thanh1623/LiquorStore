@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBag, Eye, ArrowRight } from "lucide-react";
@@ -10,6 +9,7 @@ import { useCartStore } from "@/store/cartStore";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Product } from "@/types/product";
 
 export function TastefullyYours() {
   const router = useRouter();
@@ -22,7 +22,7 @@ export function TastefullyYours() {
   const allProducts = response?.data ?? [];
   const products = allProducts.filter((p) => p.isFeatured).slice(0, 4);
 
-  const handleAddToCart = (product: any, e: React.MouseEvent) => {
+  const handleAddToCart = (product: Product, e: React.MouseEvent) => {
     e.preventDefault();
     addItem(product);
     toast.success(`${product.name} added to cart!`);

@@ -13,7 +13,7 @@ type OrderDetailRow = {
     id: string;
     quantity: number;
     priceAtTime: number | string;
-    Product?: { name: string } | null;
+    Product?: { name: string }[] | null;
   }[];
 };
 
@@ -48,7 +48,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
         id: item.id,
         quantity: item.quantity,
         priceAtTime: Number(item.priceAtTime ?? 0),
-        productName: item.Product?.name ?? 'Unknown product',
+        productName: (Array.isArray(item.Product) && item.Product.length > 0 ? item.Product[0].name : 'Unknown product'),
       })),
     },
   });

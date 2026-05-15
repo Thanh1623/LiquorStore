@@ -273,13 +273,13 @@ export default function CategoryManagementPage() {
                       <TableCell className="text-right">
                         {editId === category.id ? (
                           <>
-                            <Button variant="ghost" size="sm" onClick={() => submitEdit(category.imageUrl)} disabled={isSubmitting}>Save</Button>
+                            <Button variant="ghost" size="sm" onClick={() => submitEdit(category.imageUrl ?? null)} disabled={isSubmitting}>Save</Button>
                             <Button variant="ghost" size="sm" onClick={() => { setEditId(''); setEditName(''); setEditImageFile(null); setEditImagePreview(''); setEditImageName('No file selected'); setTableError(''); }}>Cancel</Button>
                           </>
                         ) : (
                           <>
                             <Button variant="ghost" size="sm" onClick={() => { setEditId(category.id); setEditName(category.name); setEditImagePreview(category.imageUrl ?? ''); setEditImageName(category.imageUrl ? 'Keep current image' : 'No file selected'); setTableError(''); }}>Edit</Button>
-                            <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800" onClick={() => removeCategory(category.id, category.name, category.productCount ?? 0, category.imageUrl)}>
+                            <Button variant="ghost" size="sm" className="text-rose-600 hover:text-rose-800" onClick={() => removeCategory(category.id, category.name, category.productCount ?? 0, category.imageUrl ?? null)}>
                               Delete
                             </Button>
                           </>

@@ -12,9 +12,17 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    // Handle 401/403/500 errors here
-    if (error.response?.status === 401) {
-      // Redirect to login or trigger token refresh
+    if (error.response) {
+      const { status } = error.response;
+      if (status === 401) {
+        // Handle unauthorized (e.g., redirect to login)
+        console.error('Unauthorized access - redirecting to login');
+        window.location.href = '/login';
+      } else if (status === 403) {
+        console.error('Forbidden access');
+      } else if (status >= 500) {
+        console.error('Server error - please try again later');
+      }
     }
     return Promise.reject(error);
   }
