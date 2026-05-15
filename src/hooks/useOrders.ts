@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { getOrderById, getOrders, updateOrderStatus } from '@/lib/api/orders';
+import { createOrder, getOrderById, getOrders, updateOrderStatus } from '@/lib/api/orders';
 import { OrderStatus } from '@/types/order';
 
 export const useOrders = (params: { page: number; pageSize: number; status?: string; search?: string }) => {
@@ -27,5 +27,11 @@ export const useUpdateOrderStatus = () => {
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-revenue'] });
     },
+  });
+};
+
+export const useCreateOrder = () => {
+  return useMutation({
+    mutationFn: createOrder,
   });
 };

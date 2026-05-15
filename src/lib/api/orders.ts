@@ -2,6 +2,17 @@ import api from './api-client';
 import { ApiResponse } from '@/types/api';
 import { OrderDetail, OrderListResponse, OrderStatus } from '@/types/order';
 
+export const createOrder = async (orderData: {
+  fullName: string;
+  address: string;
+  phone: string;
+  items: { productId: string; quantity: number }[];
+  total: number;
+}) => {
+  const response = await api.post<ApiResponse<{ id: string }>>('/orders', orderData);
+  return response.data;
+};
+
 export const getOrders = async (params: { page: number; pageSize: number; status?: string; search?: string }) => {
   const query = new URLSearchParams({
     page: String(params.page),

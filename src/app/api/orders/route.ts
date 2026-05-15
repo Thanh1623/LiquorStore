@@ -62,3 +62,60 @@ export async function GET(request: Request) {
     },
   });
 }
+
+export async function POST(request: Request) {
+  const supabase = await createClient();
+  const body = await request.json();
+  const { fullName, address, phone, items, total } = body;
+
+  const { data: order, error: orderError } = await supabase
+    .from('Order')
+    .insert({
+      userId: null, // Guest order
+      totalAmount: total,
+      status: 'pending',
+      shippingAddress: address,
+      customerName: fullName,
+      customerPhone: phone,
+    })
+    .select('id')
+    .single();
+
+  if (orderError) {
+    return NextResponse.json({ error: orderError.message }, { status: 500 });
+  }
+
+  const productIds = items.map((item: { productId: string }) => item.productId);
+  const { data: products, error: productError } = await supabase
+    .from('Product')
+    .select('id, price')
+    .in('id', productIds);
+
+  if (productError) {
+    return NextResponse.json({ error: productError.message }, { status: 500 });
+  }
+
+  const orderItems = [];
+  for (const item of items) {
+    const product = products.find((p) => p.id === item.productId);
+    if (!product) {
+      return NextResponse.json({ error: `Product not found: ${item.productId}` }, { status: 400 });
+    }
+    orderItems.push({
+      orderId: order.id,
+      productId: item.productId,
+      quantity: item.quantity,
+      priceAtTime: product.price,
+    });
+  }
+
+  const { error: itemsError } = await supabase
+    .from('OrderItem')
+    .insert(orderItems);
+
+  if (itemsError) {
+    return NextResponse.json({ error: itemsError.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ data: { id: order.id } }, { status: 201 });
+}

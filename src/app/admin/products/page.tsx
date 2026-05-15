@@ -22,7 +22,6 @@ type ProductForm = {
   description: string;
   stockQuantity: string;
   imageFile: File | null;
-  isFeatured: boolean;
   badge: string;
   oldPrice: string;
 };
@@ -123,7 +122,6 @@ const emptyForm: ProductForm = {
   description: '',
   stockQuantity: '0',
   imageFile: null,
-  isFeatured: false,
   badge: '',
   oldPrice: '',
 };
@@ -138,6 +136,7 @@ export default function ProductManagement() {
   const [newProduct, setNewProduct] = useState<ProductForm>(emptyForm);
   const [newProductErrors, setNewProductErrors] = useState<ProductFormErrors>({});
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isFeaturedDialogOpen, setIsFeaturedDialogOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [editForm, setEditForm] = useState<ProductForm>(emptyForm);
   const [editFormErrors, setEditFormErrors] = useState<ProductFormErrors>({});
@@ -284,7 +283,6 @@ export default function ProductManagement() {
         description: newProduct.description.trim(),
         imageUrl,
         stockQuantity: Number(newProduct.stockQuantity || 0),
-        isFeatured: newProduct.isFeatured,
         badge: newProduct.badge || null,
         oldPrice: newProduct.oldPrice ? Number(newProduct.oldPrice) : null,
       });
@@ -307,7 +305,6 @@ export default function ProductManagement() {
       description: product.description,
       stockQuantity: String(product.stockQuantity),
       imageFile: null,
-      isFeatured: product.isFeatured,
       badge: product.badge ?? '',
       oldPrice: product.oldPrice ? String(product.oldPrice) : '',
     });
@@ -341,7 +338,6 @@ export default function ProductManagement() {
         description: editForm.description.trim(),
         stockQuantity: Number(editForm.stockQuantity || 0),
         imageUrl: newImageUrl,
-        isFeatured: editForm.isFeatured,
         badge: editForm.badge || null,
         oldPrice: editForm.oldPrice ? Number(editForm.oldPrice) : null,
       });
@@ -390,6 +386,48 @@ export default function ProductManagement() {
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="text-xl text-amber-950">Inventory</CardTitle>
             <div className="flex items-center gap-3">
+              <Dialog
+                open={isFeaturedDialogOpen}
+                onOpenChange={(open) => {
+                  setIsFeaturedDialogOpen(open);
+                }}
+              >
+                <DialogTrigger
+                  render={<Button variant="outline" className="border-amber-900 text-amber-900 hover:bg-amber-100">Manage Featured</Button>}
+                />
+                <DialogContent className="max-h-[90vh] flex flex-col sm:max-w-[560px]">
+                  <DialogHeader>
+                    <DialogTitle>Manage Featured Products (Max 4)</DialogTitle>
+                  </DialogHeader>
+                  <div className="flex-1 overflow-y-auto py-3 pr-1 pb-4">
+                    <div className="grid gap-2">
+                      {productList.map((product) => {
+                        const isFeatured = product.isFeatured;
+                        const featuredCount = productList.filter((p) => p.isFeatured).length;
+                        const isDisabled = !isFeatured && featuredCount >= 4;
+
+                        return (
+                          <div key={product.id} className="flex items-center gap-3 rounded-lg border p-3">
+                            <input
+                              type="checkbox"
+                              checked={isFeatured}
+                              disabled={isDisabled}
+                              onChange={async (e) => {
+                                await updateProduct.mutateAsync({
+                                  id: product.id,
+                                  isFeatured: e.target.checked,
+                                });
+                              }}
+                              className="h-5 w-5"
+                            />
+                            <span className={isDisabled ? "text-slate-400" : "text-slate-900"}>{product.name}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
               <select
                 value={selectedCategoryFilter}
                 onChange={(e) => setSelectedCategoryFilter(e.target.value)}
@@ -444,10 +482,6 @@ export default function ProductManagement() {
                   <div className="flex items-center justify-between">
                     {newProductErrors.description ? <p className="text-xs text-rose-600">{newProductErrors.description}</p> : <span />}
                     <p className="text-[11px] text-amber-700">{newProduct.description.length}/500</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <input type="checkbox" checked={newProduct.isFeatured} onChange={(e) => setNewProduct({ ...newProduct, isFeatured: e.target.checked })} />
-                    <Label>Is Featured</Label>
                   </div>
                   <Label>Badge</Label>
                   <select
@@ -577,10 +611,6 @@ export default function ProductManagement() {
               <div className="flex items-center justify-between">
                 {editFormErrors.description ? <p className="text-xs text-rose-600">{editFormErrors.description}</p> : <span />}
                 <p className="text-[11px] text-amber-700">{editForm.description.length}/500</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <input type="checkbox" checked={editForm.isFeatured} onChange={(e) => setEditForm({ ...editForm, isFeatured: e.target.checked })} />
-                <Label>Is Featured</Label>
               </div>
               <Label>Badge</Label>
               <select
