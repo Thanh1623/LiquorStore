@@ -3,11 +3,16 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingBag, Heart, Eye, ArrowRight } from "lucide-react";
+import { ShoppingBag, Eye, ArrowRight } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { getProducts } from "@/lib/api/products";
+import { useCartStore } from "@/store/cartStore";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export function TastefullyYours() {
+  const router = useRouter();
+  const { addItem } = useCartStore();
   const { data: response, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: getProducts,
@@ -15,6 +20,17 @@ export function TastefullyYours() {
 
   const allProducts = response?.data ?? [];
   const products = allProducts.filter((p) => p.isFeatured).slice(0, 4);
+
+  const handleAddToCart = (product: any, e: React.MouseEvent) => {
+    e.preventDefault();
+    addItem(product);
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleViewDetails = (id: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    router.push(`/shop/${id}`);
+  };
 
   if (isLoading) {
     return (
@@ -60,11 +76,18 @@ export function TastefullyYours() {
 
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
-                  {[ShoppingBag, Heart, Eye].map((Icon, idx) => (
-                    <button key={idx} className="bg-white p-3 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors">
-                      <Icon size={20} />
-                    </button>
-                  ))}
+                  <button 
+                    onClick={(e) => handleAddToCart(product, e)}
+                    className="bg-white p-3 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors"
+                  >
+                    <ShoppingBag size={20} />
+                  </button>
+                  <button 
+                    onClick={(e) => handleViewDetails(product.id, e)}
+                    className="bg-white p-3 rounded-full hover:bg-[#AB4227] hover:text-white transition-colors"
+                  >
+                    <Eye size={20} />
+                  </button>
                 </div>
               </div>
 
