@@ -1,19 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
-import { categories } from "@/lib/mock-data";
+import { useCategories } from "@/hooks/useCategories";
 import { ProductListSkeleton } from "@/components/shop/ProductListSkeleton";
 
 export default function ShopPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const { data: response, isLoading } = useProducts();
+  const { data: response, isLoading: isProductsLoading } = useProducts();
+  const { data: categoriesResponse, isLoading: isCategoriesLoading } = useCategories();
+  
   const products = response?.data ?? [];
+  const categories = categoriesResponse?.data ?? [];
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+    }, 300);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [searchTerm]);
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = product.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "All" || product.categoryName === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -41,6 +55,7 @@ export default function ShopPage() {
               className="px-4 py-2 border border-gray-300 rounded-md"
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
+              disabled={isCategoriesLoading}
             >
               <option value="All">All Categories</option>
               {categories.map((cat) => (
@@ -53,7 +68,7 @@ export default function ShopPage() {
         </div>
 
         {/* Product Grid */}
-        {isLoading ? (
+        {isProductsLoading ? (
           <ProductListSkeleton />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
