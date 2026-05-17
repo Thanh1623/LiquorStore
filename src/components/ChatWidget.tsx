@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, User } from 'lucide-react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
