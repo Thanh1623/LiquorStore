@@ -3,8 +3,12 @@ import { useState, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import { useQuery } from '@tanstack/react-query';
+import { usePathname } from 'next/navigation';
 
 export function ChatWidget() {
+  const pathname = usePathname();
+  if (pathname.startsWith('/admin')) return null;
+
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ id: string; sender: string; content: string }[]>([]);
   const [input, setInput] = useState('');
