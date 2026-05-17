@@ -4,6 +4,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -47,17 +48,6 @@ model Order {
   customerName    String?
   customerPhone   String?
   user            User?       @relation(fields: [userId], references: [id])
-  orderItems      OrderItem[]
-}
-
-model OrderItem {
-  id          String  @id @default(uuid())
-  orderId     String
-  productId   String
-  quantity    Int
-  priceAtTime Decimal
-  order       Order   @relation(fields: [orderId], references: [id])
-  product     Product @relation(fields: [productId], references: [id])
 }
 
 model ChatSession {

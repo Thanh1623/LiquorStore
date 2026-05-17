@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { ChatService } from '@/lib/chat/ChatService';
 
 type OrderDetailRow = {
   id: string;
@@ -9,6 +10,7 @@ type OrderDetailRow = {
   customerName: string;
   customerPhone: string;
   shippingAddress: string;
+  senderId?: string; // Add senderId
   OrderItem?: {
     id: string;
     quantity: number;
@@ -23,7 +25,7 @@ export async function GET(_request: Request, { params }: { params: Promise<{ id:
 
   const { data, error } = await supabase
     .from('Order')
-    .select('id,totalAmount,status,createdAt,customerName,customerPhone,shippingAddress,OrderItem(id,quantity,priceAtTime,Product(name))')
+    .select('id,totalAmount,status,createdAt,customerName,customerPhone,shippingAddress,senderId,OrderItem(id,quantity,priceAtTime,Product(name))')
     .eq('id', id)
     .maybeSingle();
 
@@ -64,9 +66,10 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ error: 'Invalid status' }, { status: 400 });
   }
 
+  // Get existing order with senderId
   const { data: existing, error: existingError } = await supabase
     .from('Order')
-    .select('id,status')
+    .select('id,status,senderId')
     .eq('id', id)
     .maybeSingle();
 
@@ -81,11 +84,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     .from('Order')
     .update({ status: nextStatus })
     .eq('id', id)
-    .select('id,status')
+    .select('id,status,senderId')
     .maybeSingle();
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  // Trigger Zalo notification if senderId exists
+  if (existing.senderId) {
+    await ChatService.notifyOrderStatus(existing.senderId, id, nextStatus);
   }
 
   return NextResponse.json({ data });

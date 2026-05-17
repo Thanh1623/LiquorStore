@@ -1,20 +1,12 @@
 import Link from 'next/link';
-import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, Tags } from 'lucide-react';
-
-export function Sidebar() {
-  return (
-    <aside className="w-64 min-h-screen bg-slate-950 text-slate-200 flex flex-col p-6 border-r border-slate-800">
-      <div className="mb-10">
-        <h1 className="text-2xl font-serif text-yellow-600 tracking-wider">LuxeAdmin</h1>
-      </div>
-      
-      <nav className="flex-1 space-y-4">
-        {[
-          { icon: LayoutDashboard, label: 'Dashboard', href: '/admin' },
+import { LayoutDashboard, Package, ShoppingBag, Settings, LogOut, Tags, MessageSquare } from 'lucide-react';
+...
           { icon: Package, label: 'Products', href: '/admin/products' },
           { icon: Tags, label: 'Categories', href: '/admin/categories' },
           { icon: ShoppingBag, label: 'Orders', href: '/admin/orders' },
+          { icon: MessageSquare, label: 'Chat', href: '/admin/chat' },
           { icon: Settings, label: 'Settings', href: '/admin/settings' },
+
         ].map((item) => (
           <Link 
             key={item.label} 
