@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
 
   // 1. Get session info
   const sessionRes = await db.query(
-    `SELECT "senderId" FROM "ChatSession" WHERE id = $1`,
+    `SELECT "senderId" FROM "ChatSession" WHERE id::text = $1 OR "senderId" = $1`,
     [sessionId]
   );
   

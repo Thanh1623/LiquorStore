@@ -6,11 +6,20 @@ export const ChatService = {
     console.log('Processing Web event:', event);
     
     // Ensure Session exists for Web
-    await db.query(
+    const sessionRes = await db.query(
       `INSERT INTO "ChatSession" (id, platform, "senderId", status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), 'web', $1, 'active', NOW(), NOW())
-       ON CONFLICT ("platform", "senderId") DO UPDATE SET "updatedAt" = NOW()`,
+       ON CONFLICT ("platform", "senderId") DO UPDATE SET "updatedAt" = NOW()
+       RETURNING id`,
       [event.senderId]
+    );
+    const sessionId = sessionRes.rows[0].id;
+
+    // Save Message
+    await db.query(
+      `INSERT INTO "ChatMessage" (id, "sessionId", sender, content, "createdAt")
+       VALUES (gen_random_uuid(), $1, 'user', $2, NOW())`,
+      [sessionId, event.message?.text || '']
     );
 
     // Process Logic (similar to processZaloEvent)

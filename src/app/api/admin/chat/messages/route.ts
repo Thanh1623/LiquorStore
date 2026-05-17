@@ -10,7 +10,10 @@ export async function GET(request: NextRequest) {
   }
 
   const messages = await db.query(
-    `SELECT * FROM "ChatMessage" WHERE "sessionId" = $1 ORDER BY "createdAt" ASC`,
+    `SELECT m.* FROM "ChatMessage" m
+     JOIN "ChatSession" s ON m."sessionId" = s.id
+     WHERE s.id::text = $1 OR s."senderId" = $1
+     ORDER BY m."createdAt" ASC`,
     [sessionId]
   );
   
