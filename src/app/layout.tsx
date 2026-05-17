@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import { Toaster } from "@/components/ui/sonner";
+import { ChatWidget } from "@/components/ChatWidget";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-serif bg-neutral-50 text-neutral-900">
         <Providers>
           {children}
+          <ChatWidget />
           <Toaster />
         </Providers>
       </body>

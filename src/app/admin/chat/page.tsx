@@ -2,13 +2,15 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
+import Link from 'next/link';
+import { Send, User, Loader2, ArrowLeft } from 'lucide-react';
 
 type ChatSession = { id: string; senderId: string; lastMessage: string };
 
 export default function ChatPage() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
 
-  const { data: sessions } = useQuery({
+  const { data: sessions, isLoading } = useQuery({
     queryKey: ['chat-sessions'],
     queryFn: async () => {
       const res = await axios.get('/api/admin/chat/sessions');
@@ -17,28 +19,46 @@ export default function ChatPage() {
   });
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen bg-slate-950">
       {/* Sessions List */}
-      <div className="w-1/3 border-r p-4">
-        <h1 className="text-xl font-bold mb-4">Conversations</h1>
-        {sessions?.map(s => (
-          <div 
-            key={s.id} 
-            className={`p-3 cursor-pointer border-b ${selectedSessionId === s.id ? 'bg-gray-100' : ''}`}
-            onClick={() => setSelectedSessionId(s.id)}
-          >
-            <div className="font-semibold">{s.senderId}</div>
-            <div className="text-sm text-gray-500 truncate">{s.lastMessage}</div>
-          </div>
-        ))}
+      <div className="w-80 border-r border-slate-800 flex flex-col bg-slate-950">
+        <div className="p-6 border-b border-slate-800 flex items-center gap-3">
+          <Link href="/admin" className="text-slate-500 hover:text-yellow-600 transition-colors">
+            <ArrowLeft size={20} />
+          </Link>
+          <h1 className="text-xl font-serif text-yellow-600 tracking-wider">Conversations</h1>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          {isLoading ? (
+            <div className="p-4 flex justify-center"><Loader2 className="animate-spin text-yellow-600" /></div>
+          ) : (
+            sessions?.map(s => (
+              <div 
+                key={s.id} 
+                className={`p-5 cursor-pointer border-b border-slate-900 transition-all ${selectedSessionId === s.id ? 'bg-slate-900 border-l-4 border-l-yellow-600' : 'hover:bg-slate-900'}`}
+                onClick={() => setSelectedSessionId(s.id)}
+              >
+                <div className="flex items-center gap-3 mb-1">
+                  <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-yellow-600">
+                    <User size={16} />
+                  </div>
+                  <div className="font-medium text-slate-200 text-sm tracking-wide truncate">{s.senderId}</div>
+                </div>
+                <div className="text-xs text-slate-500 truncate ml-11">{s.lastMessage || 'No messages yet'}</div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
       
       {/* Chat Area */}
-      <div className="w-2/3 p-4">
+      <div className="flex-1 flex flex-col bg-slate-950">
         {selectedSessionId ? (
           <ChatDetail sessionId={selectedSessionId} />
         ) : (
-          <div>Select a conversation</div>
+          <div className="flex-1 flex items-center justify-center text-slate-600 font-light italic">
+            Select a conversation to start messaging
+          </div>
         )}
       </div>
     </div>
@@ -46,7 +66,7 @@ export default function ChatPage() {
 }
 
 function ChatDetail({ sessionId }: { sessionId: string }) {
-  const { data: messages } = useQuery({
+  const { data: messages, refetch } = useQuery({
     queryKey: ['chat-messages', sessionId],
     queryFn: async () => {
       const res = await axios.get(`/api/admin/chat/messages?sessionId=${sessionId}`);
@@ -54,33 +74,58 @@ function ChatDetail({ sessionId }: { sessionId: string }) {
     }
   });
   
-  // Basic reply logic
   const [reply, setReply] = useState('');
+  const [sending, setSending] = useState(false);
   
   const handleReply = async () => {
+    if (!reply.trim()) return;
+    setSending(true);
     await axios.post('/api/admin/chat/reply', { sessionId, message: reply });
     setReply('');
+    setSending(false);
+    refetch();
   };
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 overflow-y-auto mb-4">
+    <>
+      {/* Chat Header */}
+      <div className="p-4 border-b border-slate-800 flex items-center gap-3">
+        <div className="w-10 h-10 rounded-full bg-yellow-600/10 flex items-center justify-center text-yellow-600">
+          <User size={20} />
+        </div>
+        <h2 className="font-medium text-slate-200">Customer Support</h2>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto p-6 space-y-4">
         {messages?.map(m => (
-          <div key={m.id} className={`mb-2 ${m.sender === 'admin' ? 'text-right' : 'text-left'}`}>
-            <span className={`p-2 rounded ${m.sender === 'admin' ? 'bg-blue-100' : 'bg-gray-200'}`}>
+          <div key={m.id} className={`flex ${m.sender === 'admin' ? 'justify-end' : 'justify-start'}`}>
+            <div className={`max-w-[70%] p-4 rounded-2xl text-sm ${m.sender === 'admin' ? 'bg-yellow-600 text-white rounded-br-none' : 'bg-slate-800 text-slate-200 rounded-bl-none'}`}>
               {m.content}
-            </span>
+            </div>
           </div>
         ))}
       </div>
-      <div className="flex">
-        <input 
-          className="flex-1 border p-2" 
-          value={reply} 
-          onChange={e => setReply(e.target.value)}
-        />
-        <button className="bg-blue-500 text-white p-2" onClick={handleReply}>Send</button>
+      
+      {/* Input Area */}
+      <div className="p-4 border-t border-slate-800 bg-slate-900">
+        <div className="flex gap-2">
+          <input 
+            className="flex-1 bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-slate-200 focus:outline-none focus:border-yellow-600 transition-colors"
+            placeholder="Type your reply..."
+            value={reply} 
+            onChange={e => setReply(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && handleReply()}
+          />
+          <button 
+            className="bg-yellow-600 hover:bg-yellow-700 text-white p-3 rounded-xl transition-colors disabled:opacity-50" 
+            onClick={handleReply}
+            disabled={sending}
+          >
+            {sending ? <Loader2 className="animate-spin" size={20} /> : <Send size={20} />}
+          </button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
