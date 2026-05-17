@@ -12,16 +12,28 @@ export function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ id: string; sender: string; content: string }[]>([]);
   const [input, setInput] = useState('');
-  const [sessionId] = useState(() => `web_${Date.now()}`);
+  const [sessionId, setSessionId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const stored = localStorage.getItem('chat_session_id');
+    if (stored) {
+      setSessionId(stored);
+    } else {
+      const newId = `web_${Date.now()}`;
+      localStorage.setItem('chat_session_id', newId);
+      setSessionId(newId);
+    }
+  }, []);
 
   const { refetch } = useQuery({
     queryKey: ['web-chat', sessionId],
     queryFn: async () => {
+      if (!sessionId) return [];
       const res = await axios.get(`/api/admin/chat/messages?sessionId=${sessionId}`);
       setMessages(res.data.data);
       return res.data.data;
     },
-    enabled: isOpen,
+    enabled: isOpen && !!sessionId,
     refetchInterval: 3000
   });
 
