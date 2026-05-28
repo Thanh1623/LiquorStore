@@ -1,11 +1,36 @@
 import { db } from '@/lib/db';
 import { zaloClient } from '@/lib/zalo';
+import { groq } from '@/lib/groq';
+
+const SYSTEM_PROMPT = `You are a refined, sophisticated sommelier at a luxury liquor store named LuxeStore.
+Your tone is elegant, professional, and concise. You provide expert guidance on spirits.
+You can help customers choose products and handle orders.
+If a customer wants to buy, use the exact name of the product from the list.
+
+Knowledge Base:
+- Products: {products}
+- Shipping Policy: We offer free shipping for orders over 2.000.000 VNĐ. Standard delivery takes 1-3 days.
+- Return Policy: We accept returns within 7 days if the product seal is unopened.
+
+If you don't know the answer, politely guide them to contact our staff.`;
 
 export const ChatService = {
+  async getProductContext() {
+    const products = await db.query('SELECT name, price FROM "Product"');
+    return products.rows.map(p => `${p.name} (${p.price} VNĐ)`).join(', ');
+  },
+
   async processWebEvent(event: any) {
-    console.log('Processing Web event:', event);
+    const message = (event.message?.text || '').toLowerCase();
     
-    // Ensure Session exists for Web
+    // 1. Identify Purchase Intent
+    if (message.includes('mua ')) {
+      const productName = message.split('mua ')[1].trim();
+      await this.handleOrderPlacement(event.senderId, productName, 'web');
+      return { success: true }; // Order placement sends its own message
+    }
+
+    // 2. AI Processing for conversational queries
     const sessionRes = await db.query(
       `INSERT INTO "ChatSession" (id, platform, "senderId", status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), 'web', $1, 'active', NOW(), NOW())
@@ -15,24 +40,30 @@ export const ChatService = {
     );
     const sessionId = sessionRes.rows[0].id;
 
-    // Save Message
     await db.query(
       `INSERT INTO "ChatMessage" (id, "sessionId", sender, content, "createdAt")
        VALUES (gen_random_uuid(), $1, 'user', $2, NOW())`,
       [sessionId, event.message?.text || '']
     );
 
-    // Process Logic (similar to processZaloEvent)
-    const message = (event.message?.text || '').toLowerCase();
+    const products = await this.getProductContext();
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT.replace('{products}', products) },
+        { role: 'user', content: event.message?.text || '' }
+      ],
+      model: 'llama-3.3-70b-versatile',
+    });
+
+    const aiReply = chatCompletion.choices[0]?.message?.content || 'Xin lỗi, tôi chưa thể trả lời bạn lúc này.';
+
+    await db.query(
+      `INSERT INTO "ChatMessage" (id, "sessionId", sender, content, "createdAt")
+       VALUES (gen_random_uuid(), $1, 'admin', $2, NOW())`,
+      [sessionId, aiReply]
+    );
     
-    if (message.includes('mua ')) {
-      const productName = message.split('mua ')[1].trim();
-      await this.handleOrderPlacement(event.senderId, productName, 'web');
-    } else if (message.includes('whiskey')) {
-      await this.handleWhiskeyPurchase(event.senderId);
-    }
-    
-    return { success: true };
+    return { success: true, reply: aiReply };
   },
 
   async processZaloEvent(event: any) {
