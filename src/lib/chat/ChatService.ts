@@ -14,22 +14,13 @@ Knowledge Base:
 
 If you don't know the answer, politely guide them to contact our staff.`;
 
-interface IChatService {
-  getProductContext(): Promise<string>;
-  handleWhiskeyPurchase(senderId: string): Promise<void>;
-  handleOrderPlacement(senderId: string, productName: string, platform?: string): Promise<void>;
-  notifyOrderStatus(senderId: string, orderId: string, status: string): Promise<void>;
-  processWebEvent(event: any): Promise<{ success: boolean; reply?: string }>;
-  processZaloEvent(event: any): Promise<{ success: boolean }>;
-}
-
-export const ChatService = {
-  async getProductContext() {
+export class ChatService {
+  static async getProductContext(): Promise<string> {
     const products = await db.query('SELECT name, price FROM "Product"');
     return products.rows.map(p => `${p.name} (${p.price} VNĐ)`).join(', ');
-  },
+  }
 
-  async handleWhiskeyPurchase(this: IChatService, senderId: string) {
+  static async handleWhiskeyPurchase(senderId: string): Promise<void> {
     console.log('Handling whiskey purchase for:', senderId);
     
     // 1. Truy vấn sản phẩm
@@ -47,9 +38,9 @@ export const ChatService = {
     
     // 3. Gửi trả lại Zalo
     await zaloClient.sendMessage(senderId, reply);
-  },
+  }
 
-  async handleOrderPlacement(this: IChatService, senderId: string, productName: string, platform: string = 'zalo') {
+  static async handleOrderPlacement(senderId: string, productName: string, platform: string = 'zalo'): Promise<void> {
     console.log('DEBUG: Handling order placement for:', senderId, 'Product:', productName);
     
     // 1. Find product
@@ -89,21 +80,21 @@ export const ChatService = {
     if (platform === 'zalo') {
       await zaloClient.sendMessage(senderId, `Đã đặt hàng thành công! Đơn hàng của bạn: ${product.name} - Giá: ${product.price} VNĐ.`);
     }
-  },
+  }
 
-  async notifyOrderStatus(this: IChatService, senderId: string, orderId: string, status: string) {
+  static async notifyOrderStatus(senderId: string, orderId: string, status: string): Promise<void> {
     console.log('Notifying order status for:', senderId, 'Order:', orderId, 'Status:', status);
     const message = `Đơn hàng #${orderId.substring(0, 8)} của bạn đã được cập nhật trạng thái: ${status.toUpperCase()}.`;
     await zaloClient.sendMessage(senderId, message);
-  },
+  }
 
-  async processWebEvent(this: IChatService, event: any) {
+  static async processWebEvent(event: any): Promise<{ success: boolean; reply?: string }> {
     const message = (event.message?.text || '').toLowerCase();
     
     // 1. Identify Purchase Intent
     if (message.includes('mua ')) {
       const productName = message.split('mua ')[1].trim();
-      await this.handleOrderPlacement(event.senderId, productName, 'web');
+      await ChatService.handleOrderPlacement(event.senderId, productName, 'web');
       return { success: true }; // Order placement sends its own message
     }
 
@@ -123,7 +114,7 @@ export const ChatService = {
       [sessionId, event.message?.text || '']
     );
 
-    const products = await this.getProductContext();
+    const products = await ChatService.getProductContext();
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         { role: 'system', content: SYSTEM_PROMPT.replace('{products}', products) },
@@ -141,9 +132,9 @@ export const ChatService = {
     );
     
     return { success: true, reply: aiReply };
-  },
+  }
 
-  async processZaloEvent(this: IChatService, event: any) {
+  static async processZaloEvent(event: any): Promise<{ success: boolean }> {
     console.log('DEBUG: Processing Zalo event:', JSON.stringify(event));
     
     const sessionRes = await db.query(
@@ -168,13 +159,13 @@ export const ChatService = {
     if (message.includes('mua ')) {
       const productName = message.split('mua ')[1].trim();
       console.log('DEBUG: Identified "mua" intent for:', productName);
-      await this.handleOrderPlacement(event.senderId, productName, 'zalo');
+      await ChatService.handleOrderPlacement(event.senderId, productName, 'zalo');
     } else if (message.includes('whiskey')) {
-      await this.handleWhiskeyPurchase(event.senderId);
+      await ChatService.handleWhiskeyPurchase(event.senderId);
     } else {
       await zaloClient.sendMessage(event.senderId, "Chào bạn, mình có thể giúp gì cho bạn? Bạn có thể thử hỏi 'mua [tên rượu]' hoặc xem danh sách 'whiskey'.");
     }
     
     return { success: true };
   }
-} as IChatService;
+}
