@@ -14,7 +14,16 @@ Knowledge Base:
 
 If you don't know the answer, politely guide them to contact our staff.`;
 
-export const ChatService = {
+interface IChatService {
+  getProductContext(): Promise<string>;
+  handleWhiskeyPurchase(senderId: string): Promise<void>;
+  handleOrderPlacement(senderId: string, productName: string, platform?: string): Promise<void>;
+  notifyOrderStatus(senderId: string, orderId: string, status: string): Promise<void>;
+  processWebEvent(event: any): Promise<{ success: boolean; reply?: string }>;
+  processZaloEvent(event: any): Promise<{ success: boolean }>;
+}
+
+export const ChatService: IChatService = {
   async getProductContext() {
     const products = await db.query('SELECT name, price FROM "Product"');
     return products.rows.map(p => `${p.name} (${p.price} VNĐ)`).join(', ');
@@ -95,7 +104,7 @@ export const ChatService = {
     if (message.includes('mua ')) {
       const productName = message.split('mua ')[1].trim();
       await this.handleOrderPlacement(event.senderId, productName, 'web');
-      return { success: true };
+      return { success: true }; // Order placement sends its own message
     }
 
     // 2. AI Processing
@@ -145,6 +154,7 @@ export const ChatService = {
       ['zalo', event.senderId]
     );
     const sessionId = sessionRes.rows[0].id;
+    console.log('DEBUG: Session ID:', sessionId);
     
     await db.query(
       `INSERT INTO "ChatMessage" (id, "sessionId", sender, content, "createdAt")
@@ -153,9 +163,11 @@ export const ChatService = {
     );
 
     const message = (event.message?.text || '').toLowerCase();
+    console.log('DEBUG: Message processed:', message);
     
     if (message.includes('mua ')) {
       const productName = message.split('mua ')[1].trim();
+      console.log('DEBUG: Identified "mua" intent for:', productName);
       await this.handleOrderPlacement(event.senderId, productName, 'zalo');
     } else if (message.includes('whiskey')) {
       await this.handleWhiskeyPurchase(event.senderId);
