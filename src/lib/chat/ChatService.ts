@@ -23,13 +23,13 @@ interface IChatService {
   processZaloEvent(event: any): Promise<{ success: boolean }>;
 }
 
-export const ChatService: IChatService = {
+export const ChatService = {
   async getProductContext() {
     const products = await db.query('SELECT name, price FROM "Product"');
     return products.rows.map(p => `${p.name} (${p.price} VNĐ)`).join(', ');
   },
 
-  async handleWhiskeyPurchase(senderId: string) {
+  async handleWhiskeyPurchase(this: IChatService, senderId: string) {
     console.log('Handling whiskey purchase for:', senderId);
     
     // 1. Truy vấn sản phẩm
@@ -49,7 +49,7 @@ export const ChatService: IChatService = {
     await zaloClient.sendMessage(senderId, reply);
   },
 
-  async handleOrderPlacement(senderId: string, productName: string, platform: string = 'zalo') {
+  async handleOrderPlacement(this: IChatService, senderId: string, productName: string, platform: string = 'zalo') {
     console.log('DEBUG: Handling order placement for:', senderId, 'Product:', productName);
     
     // 1. Find product
@@ -91,13 +91,13 @@ export const ChatService: IChatService = {
     }
   },
 
-  async notifyOrderStatus(senderId: string, orderId: string, status: string) {
+  async notifyOrderStatus(this: IChatService, senderId: string, orderId: string, status: string) {
     console.log('Notifying order status for:', senderId, 'Order:', orderId, 'Status:', status);
     const message = `Đơn hàng #${orderId.substring(0, 8)} của bạn đã được cập nhật trạng thái: ${status.toUpperCase()}.`;
     await zaloClient.sendMessage(senderId, message);
   },
 
-  async processWebEvent(event: any) {
+  async processWebEvent(this: IChatService, event: any) {
     const message = (event.message?.text || '').toLowerCase();
     
     // 1. Identify Purchase Intent
@@ -143,7 +143,7 @@ export const ChatService: IChatService = {
     return { success: true, reply: aiReply };
   },
 
-  async processZaloEvent(event: any) {
+  async processZaloEvent(this: IChatService, event: any) {
     console.log('DEBUG: Processing Zalo event:', JSON.stringify(event));
     
     const sessionRes = await db.query(
@@ -177,4 +177,4 @@ export const ChatService: IChatService = {
     
     return { success: true };
   }
-};
+} as IChatService;
