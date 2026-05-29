@@ -1,16 +1,3 @@
-import { PrismaClient } from '@prisma/client';
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-export const prisma =
-  globalForPrisma.prisma ||
-  (new PrismaClient({
-    log: ['query'],
-    datasources: {
-      db: {
-        url: process.env.DATABASE_URL,
-      },
-    },
-  } as any));
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
+// Placeholder to avoid Vercel build errors since the project uses raw SQL (pg) instead of Prisma.
+// No files in src/ are currently importing or using Prisma.
+export const prisma = null as any;
